@@ -1,0 +1,111 @@
+#Welcome to the PhantomCombat settings configuration!
+#
+#Is this file not loading properly? Put the file through a Yaml Parser!
+# Popular link: https://yaml-online-parser.appspot.com/
+#
+#For support, please open a private message to lokka30.
+# Attempting to get support in reviews may revoke my assistance.
+
+#It might be frustrating when your enemy logs out whilst in battle. Combat mode solves that.
+combat-mode:
+ enable: true
+
+ #What worlds should combat mode take effect?
+ enabled-worlds:
+   - 'world'
+   - 'world_nether'
+   - 'world_the_end'
+
+ #What gamemodes should combat mode take effect?
+ enabled-gamemodes:
+   - SURVIVAL
+   - ADVENTURE
+
+ #What combat causes should engage the defender in combat?
+ enabled-combat-causes:
+   #player: attacker is a player.
+   player: true
+
+   #entity: attacker is an entity, but not a player.
+   entity: true
+
+   #generic: damage was from a generic cause, e.g. contact with a cactus, fall damage...
+   generic: true
+
+ #Time until combat mode expires, in seconds.
+ time: 15
+
+ #Should the player be killed if they leave whilst in combat mode?
+ # Disabling this means that there are no punishments for combat mode,
+ # rendering it pretty useless. This option is here anyways :)
+ kill-tagged-player-on-quit: true
+
+ block-flight: false
+
+ #Block all teleports (including plugin-caused)?
+ block-teleport: false
+
+ #List of items to cancel interact with in hands in combat mode
+ block-items:
+    enable: true
+    items:
+      - ENDER_PEARL
+      - CHORUS_FRUIT
+
+ #Block commands from being processed in combat mode
+ block-commands:
+    enable: true
+    commands:
+      - tpa
+      - tpaccept
+      - tpdeny
+      - spawn
+      - home
+      - warp
+      - tp
+      - tphere
+      - fly
+
+death-coords:
+ enable: true
+
+blood:
+ enable: true
+
+ #What worlds should bleeding take effect?
+ enabled-worlds:
+   - world
+   - world_nether
+   - world_the_end
+
+ #Should entities bleed (not players)?
+ entities-bleed: true
+
+ #Should players bleed?
+ players-bleed: true
+
+ #Want to toggle specific causes?
+ cause:
+   fall: true
+   drowning: false
+   starvation: false
+   suffocation: false
+   contact: true
+   fire: false
+
+armor-hit-sound:
+ enable: true
+ sound: 'ENTITY_ZOMBIE_ATTACK_IRON_DOOR'
+ volume: 0.7
+ pitch: 1.8
+
+#Print status messages at startup?
+# Due to the plugin's load sequence, it only hides messages
+# after the configurations load.
+# Example: '[Loading 1/7] Registering instance...'
+status-messages: true
+
+#I recommend you leave this number as it is.
+# If you've updated your configuration with
+# values from the new update, you may change it.
+file-version: 1

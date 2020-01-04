@@ -1,0 +1,17 @@
+io\github\lokka30\phantomcombat\listeners\LCombatMode$1.class
+io\github\lokka30\phantomcombat\listeners\LBlood.class
+io\github\lokka30\phantomcombat\listeners\LCombatMode.class
+io\github\lokka30\phantomcombat\listeners\LArmorHitSound.class
+io\github\lokka30\phantomcombat\PhantomCombat$1.class
+io\github\lokka30\phantomcombat\commands\CStats.class
+io\github\lokka30\phantomcombat\commands\CDeathCoords.class
+io\github\lokka30\phantomcombat\listeners\LDeathCoords.class
+io\github\lokka30\phantomcombat\utils\UpdateChecker.class
+io\github\lokka30\phantomcombat\listeners\LArmorHitSound$1.class
+io\github\lokka30\phantomcombat\listeners\LStats.class
+io\github\lokka30\phantomcombat\listeners\LBlood$1.class
+io\github\lokka30\phantomcombat\PhantomCombat.class
+io\github\lokka30\phantomcombat\commands\CPhantomCombat.class
+io\github\lokka30\phantomcombat\LogLevel.class
+io\github\lokka30\phantomcombat\listeners\LCombatMode$2.class
+io\github\lokka30\phantomcombat\CombatCause.class

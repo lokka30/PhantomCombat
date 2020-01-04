@@ -1,0 +1,24 @@
+name: PhantomCombat
+main: io.github.lokka30.phantomcombat.PhantomCombat
+version: ${project.version}
+api-version: '1.15'
+author: lokka30
+
+description: Enhance your combat experience!
+website: lokka30.github.io
+
+commands:
+  phantomcombat:
+    description: Plugin information.
+  combat:
+    aliases: [combatlog, combatmode]
+    description: Check your combat mode information.
+  pvp:
+    aliases: [pvptoggle, togglepvp, pvpt, tpvp]
+    description: Toggle your PvP status.
+  stats:
+    aliases: [pvpstats, stat, kills, deaths, kdr]
+    description: View your own or anothers combat stats
+  deathcoordinates:
+    aliases: [deathcoords, deathcoord, deathlocation, deathloc]
+    description: The location of your last death.
