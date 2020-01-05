@@ -17,6 +17,7 @@ public class CPhantomCombat implements CommandExecutor {
         s.sendMessage(instance.colorize("&7This server is running &a&lPhantomCombat&a v" + instance.getDescription().getVersion() + "&7."));
         s.sendMessage(instance.colorize("&7Developer: &alokka30&8 | &7Enhance your combat experience!"));
         s.sendMessage(instance.colorize("&7Developed for version &a" + instance.getDescription().getAPIVersion() + "&7."));
+        s.sendMessage(instance.colorize("&7Plugin link: &a&nhttps://www.spigotmc.org/resources/%E2%9A%94-phantomcombat-%E2%9A%94-enhance-your-combat-experience.74060/"));
         s.sendMessage(instance.colorize("&8&m+--------------------------------------------+"));
         s.sendMessage(instance.colorize("&a&lCommands:"));
         s.sendMessage(instance.colorize("&8 - &2/deathcoords [p] &8| &7View your death coordinates"));

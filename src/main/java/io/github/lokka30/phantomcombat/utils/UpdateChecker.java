@@ -21,7 +21,7 @@ public class UpdateChecker {
 
     public UpdateChecker(Plugin plugin, int resourceId) {
         this.plugin = plugin;
-        this.resourceId = resourceId;
+        this.resourceId = 74060;
     }
 
     public void getVersion(final Consumer<String> consumer) {

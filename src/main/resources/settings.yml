@@ -119,7 +119,10 @@ armor-hit-sound:
   volume: 0.7
   pitch: 1.8
 
+#Check for updates?
+updater: true
+
 #I recommend you leave this number as it is.
 # If you've updated your configuration with
 # values from the new update, you may change it.
-file-version: 1
+file-version: 2

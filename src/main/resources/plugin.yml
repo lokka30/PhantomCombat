@@ -5,7 +5,7 @@ api-version: '1.15'
 author: lokka30
 
 description: Enhance your combat experience!
-website: lokka30.github.io
+website: https://www.spigotmc.org/resources/%E2%9A%94-phantomcombat-%E2%9A%94-enhance-your-combat-experience.74060/
 
 commands:
   phantomcombat:
