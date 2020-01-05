@@ -27,9 +27,9 @@ public class LStats implements Listener {
             killstreak++;
             instance.data.set("stats." + attacker + ".killstreak", String.valueOf(killstreak));
 
-            int highestKillstreak = Integer.parseInt(instance.data.getOrDefault("stats." + attacker + ".highestKillstreak", "0"));
+            int highestKillstreak = Integer.parseInt(instance.data.getOrDefault("stats." + attacker + ".highest-killstreak", "0"));
             if (killstreak > highestKillstreak) {
-                instance.data.set("stats." + attacker + ".highestKillstreak", String.valueOf(killstreak));
+                instance.data.set("stats." + attacker + ".highest-killstreak", String.valueOf(killstreak));
             }
         }
     }

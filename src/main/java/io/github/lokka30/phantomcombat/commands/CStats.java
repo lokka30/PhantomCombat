@@ -54,7 +54,7 @@ public class CStats implements CommandExecutor {
         final String deaths = instance.data.getOrSetDefault(path + "deaths", "0");
         final String kdr = getKDR(Integer.parseInt(kills), Integer.parseInt(deaths));
         final String killstreak = instance.data.getOrSetDefault(path + "killstreak", "0");
-        final String highestKillstreak = instance.data.getOrSetDefault(path + "highestKillstreak", "0");
+        final String highestKillstreak = instance.data.getOrSetDefault(path + "highest-killstreak", "0");
 
         List<String> messages = instance.messages.getStringList("stats.list");
         for (String msg : messages) {
@@ -64,7 +64,7 @@ public class CStats implements CommandExecutor {
                     .replaceAll("%deaths%", deaths)
                     .replaceAll("%kdr%", kdr)
                     .replaceAll("%killstreak%", killstreak)
-                    .replaceAll("%highestKillstreak%", highestKillstreak));
+                    .replaceAll("%highest-killstreak%", highestKillstreak));
         }
     }
 

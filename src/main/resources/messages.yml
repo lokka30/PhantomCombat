@@ -28,14 +28,22 @@ combat-mode:
       #Caused by generic damage.
       generic: 'generic damage'
 
-    chat:
-      #Should combat mode status messages be shown in the chat?
+    action-bar:
+      #Should combat mode status messages be shown in the action bar?
       enable: true
 
       combat-entered: '&a&lPhantomCombat: &7You have entered combat mode! Do not log out for &a%time% seconds&7. &8(&7Tagged from &a%reason%&8)'
       combat-expired: '&a&lPhantomCombat: &7Combat mode has expired, you may log out if you wish.'
 
-    bar:
+    chat:
+      #Should combat mode status messages be shown in the chat?
+      #Can fill up the chat on PvP servers, so it's off by default.
+      enable: false
+
+      combat-entered: '&a&lPhantomCombat: &7You have entered combat mode! Do not log out for &a%time% seconds&7. &8(&7Tagged from &a%reason%&8)'
+      combat-expired: '&a&lPhantomCombat: &7Combat mode has expired, you may log out if you wish.'
+
+    boss-bar:
       #Should combat mode status messages be shown in the boss bar?
       enable: true
 
@@ -53,14 +61,14 @@ stats:
   usage: '&a&lPhantomCombat: &7Usage: &a/stats [player]'
   usage-console: '&a&lPhantomCombat: &7Usage (console): &a/stats <player>'
   list:
-    - '&8&m-------------------------'
+    - '&8&m+------------------------------+'
     - '&a&lPhantomCombat: &r%player%&7''s stats:'
-    - '&aKills: &2%kills%'
-    - '&aDeaths: &2%deaths%'
-    - '&aKDR: &2%kdr%'
-    - '&aKillstreak: &2%killstreak%'
-    - '&aHighest Killstreak: &2%highest-killstreak%'
-    - '&8&m-------------------------'
+    - '&aKills: &7%kills%'
+    - '&aDeaths: &7%deaths%'
+    - '&aKDR: &7%kdr%'
+    - '&aKillstreak: &7%killstreak%'
+    - '&aHighest Killstreak: &7%highest-killstreak%'
+    - '&8&m+------------------------------+'
 
 death-coords:
   usage: '&a&lPhantomCombat: &7Usage: &a/deathcoords [player]'

@@ -7,8 +7,11 @@ import io.github.lokka30.phantomcombat.commands.CPhantomCombat;
 import io.github.lokka30.phantomcombat.commands.CStats;
 import io.github.lokka30.phantomcombat.listeners.*;
 import io.github.lokka30.phantomcombat.utils.UpdateChecker;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,7 +39,7 @@ public class PhantomCombat extends JavaPlugin {
     public void onEnable() {
         log(LogLevel.STATUS, "&8[&7Loading&8] PhantomCombat&7 developed by lokka30");
 
-        log(LogLevel.STATUS, "&8[&71/6&8] &5Checking compatibility...");
+        log(LogLevel.STATUS, "&8[&71/5&8] &7Checking compatibility...");
         checkCompatibility();
 
         log(LogLevel.STATUS, "&8[&72/5&8] &7Managing configurations...");
@@ -53,7 +56,6 @@ public class PhantomCombat extends JavaPlugin {
 
         log(LogLevel.STATUS, "&8[&7Loaded&8]&7 Thank you for chosing PhantomCombat!");
 
-        log(LogLevel.STATUS, "&8[&7Updater&8] &7Checking for updates...");
         checkUpdates();
     }
 
@@ -76,10 +78,8 @@ public class PhantomCombat extends JavaPlugin {
         final String suggestedVersion = getDescription().getAPIVersion();
 
         assert suggestedVersion != null;
-        if (getServer().getVersion().contains(suggestedVersion)) {
-            log(LogLevel.STATUS, "&8[&72/7&8] &7You are running the correct server version.");
-        } else {
-            log(LogLevel.WARNING, "&8[&72/7&8] &7You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7.");
+        if (!getServer().getVersion().contains(suggestedVersion)) {
+            log(LogLevel.WARNING, "&8[&71/5&8] &7You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7.");
         }
     }
 
@@ -140,6 +140,7 @@ public class PhantomCombat extends JavaPlugin {
      */
     public void checkUpdates() {
         if (settings.getBoolean("updater")) {
+            log(LogLevel.STATUS, "&8[&7Updater&8] &7Checking for updates...");
             new UpdateChecker(this, 12345).getVersion(version -> {
                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                     log(LogLevel.STATUS, "&8[&7Updater&8] &7You have the latest version installed.");
@@ -147,8 +148,6 @@ public class PhantomCombat extends JavaPlugin {
                     log(LogLevel.INFO, "&8[&7Updater&8] &a&nA new update is available for download.");
                 }
             });
-        } else {
-            log(LogLevel.STATUS, "&8[&7Updater&8] &7Updater disabled in settings.yml.");
         }
     }
 
@@ -160,11 +159,6 @@ public class PhantomCombat extends JavaPlugin {
         String prefix;
         switch (level) {
             case STATUS:
-                if (configEnabled) {
-                    if (!settings.getBoolean("status-messages")) {
-                        return;
-                    }
-                }
                 prefix = "&7STATUS";
                 break;
             case INFO:
@@ -182,6 +176,10 @@ public class PhantomCombat extends JavaPlugin {
         }
 
         getServer().getConsoleSender().sendMessage(colorize("&8[" + prefix + "&8] &a&lPhantomCombat: &7" + msg));
+    }
+
+    public void actionBar(Player p, String msg) {
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(colorize(msg)));
     }
 
 }

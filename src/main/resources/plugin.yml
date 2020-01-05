@@ -10,15 +10,10 @@ website: lokka30.github.io
 commands:
   phantomcombat:
     description: Plugin information.
-  combat:
-    aliases: [combatlog, combatmode]
-    description: Check your combat mode information.
-  pvp:
-    aliases: [pvptoggle, togglepvp, pvpt, tpvp]
-    description: Toggle your PvP status.
+    aliases: [combat]
   stats:
     aliases: [pvpstats, stat, kills, deaths, kdr]
     description: View your own or anothers combat stats
-  deathcoordinates:
-    aliases: [deathcoords, deathcoord, deathlocation, deathloc]
+  deathcoords:
+    aliases: [deathcoordinates, deathcoord, deathlocation, deathloc]
     description: The location of your last death.
