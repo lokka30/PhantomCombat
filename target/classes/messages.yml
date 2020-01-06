@@ -11,56 +11,64 @@ common:
   target-offline: '&a&lPhantomCombat: &r%target%&7 isn''t online.'
 
 combat-mode:
- flight-blocked: '&a&lPhantomCombat: &7You can''t fly whilst in combat mode.'
- teleport-blocked: '&a&lPhantomCombat: &7You can''t teleport whilst in combat mode.'
- item-blocked: '&a&lPhantomCombat: &7You can''t use that whilst in combat mode.'
- command-blocked: '&a&lPhantomCombat: &7You can''t use that command whilst in combat mode.'
- player-left-in-combat: '&a&lPhantomCombat: &f%player%&7 left whilst in combat mode and was killed.'
+  flight-blocked: '&a&lPhantomCombat: &7You can''t fly whilst in combat mode.'
+  teleport-blocked: '&a&lPhantomCombat: &7You can''t teleport whilst in combat mode.'
+  item-blocked: '&a&lPhantomCombat: &7You can''t use that whilst in combat mode.'
+  command-blocked: '&a&lPhantomCombat: &7You can''t use that command whilst in combat mode.'
+  player-left-in-combat: '&a&lPhantomCombat: &f%player%&7 left whilst in combat mode and was killed.'
 
- status:
-  reasons:
-   #Caused by player. %player%
-   player: 'fight&7 with &r%player%'
+  status:
+    reasons:
+      #Caused by player. %player%
+      player: 'fight&7 with &r%player%'
 
-   #Caused by entity.
-   entity: 'attack&7 by &a%name%'
+      #Caused by entity.
+      entity: 'attack&7 by &a%name%'
 
-   #Caused by generic damage.
-   generic: 'generic damage'
+      #Caused by generic damage.
+      generic: 'generic damage'
 
-  chat:
-    #Should combat mode status messages be shown in the chat?
-    enable: true
+    action-bar:
+      #Should combat mode status messages be shown in the action bar?
+      enable: true
 
-    combat-entered: '&a&lPhantomCombat: &7You have entered combat mode! Do not log out for &a%time% seconds&7. &8(&7Tagged from &a%reason%&8)'
-    combat-expired: '&a&lPhantomCombat: &7Combat mode has expired, you may log out if you wish.'
+      combat-entered: '&a&lPhantomCombat: &7You have entered combat mode! Do not log out for &a%time% seconds&7. &8(&7Tagged from &a%reason%&8)'
+      combat-expired: '&a&lPhantomCombat: &7Combat mode has expired, you may log out if you wish.'
 
-  bar:
-    #Should combat mode status messages be shown in the boss bar?
-    enable: true
+    chat:
+      #Should combat mode status messages be shown in the chat?
+      #Can fill up the chat on PvP servers, so it's off by default.
+      enable: false
 
-    #BarColor: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarColor.html
-    barColor: GREEN
+      combat-entered: '&a&lPhantomCombat: &7You have entered combat mode! Do not log out for &a%time% seconds&7. &8(&7Tagged from &a%reason%&8)'
+      combat-expired: '&a&lPhantomCombat: &7Combat mode has expired, you may log out if you wish.'
 
-    #BarStyle: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarStyle.html
-    barStyle: SOLID
+    boss-bar:
+      #Should combat mode status messages be shown in the boss bar?
+      enable: true
 
-    #The title of the boss bar. %time% for the current time left.
-    counter: '&7You are in combat mode! Do not log out for &a%time% seconds&7.'
+      #BarColor: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarColor.html
+      barColor: GREEN
+
+      #BarStyle: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarStyle.html
+      barStyle: SOLID
+
+      #The title of the boss bar. %time% for the current time left.
+      counter: '&7You are in combat mode! Do not log out for &a%time% seconds&7.'
 
 #The stats system.
 stats:
   usage: '&a&lPhantomCombat: &7Usage: &a/stats [player]'
   usage-console: '&a&lPhantomCombat: &7Usage (console): &a/stats <player>'
   list:
-    - '&8&m-------------------------'
+    - '&8&m+------------------------------+'
     - '&a&lPhantomCombat: &r%player%&7''s stats:'
-    - '&aKills: &2%kills%'
-    - '&aDeaths: &2%deaths%'
-    - '&aKDR: &2%kdr%'
-    - '&aKillstreak: &2%killstreak%'
-    - '&aHighest Killstreak: &2%highest-killstreak%'
-    - '&8&m-------------------------'
+    - '&aKills: &7%kills%'
+    - '&aDeaths: &7%deaths%'
+    - '&aKDR: &7%kdr%'
+    - '&aKillstreak: &7%killstreak%'
+    - '&aHighest Killstreak: &7%highest-killstreak%'
+    - '&8&m+------------------------------+'
 
 death-coords:
   usage: '&a&lPhantomCombat: &7Usage: &a/deathcoords [player]'
@@ -75,7 +83,19 @@ death-coords:
   on-death: '&a&lPhantomCombat: &7To view where you last died at, run &a/deathcoords&7. '
   disabled: '&a&lPhantomCombat: &7The Death-Coords module is disabled.'
 
+grace-period:
+  started: '&a&lPhantomCombat: &7Grace period started! You have &a%time% seconds&7 of defence against other players.'
+  target-protected: '&a&lPhantomCombat: &f%target%&7 is under grace protection.'
+  target-broke-period: '&a&lPhantomCombat: &f%target%&7 broke their grace period and can attack you!'
+  broke-period: '&a&lPhantomCombat: &7You broke your grace period, players may now attack you!'
+  ended: '&a&lPhantomCombat: &7Your grace period ended.'
+
+  #Commands
+  usage: '&a&lPhantomCombat: &7Usage: &a/graceperiod forceStart <player>'
+  force-started: '&a&lPhantomCombat: &7Force-started &r%target%&7''s grace period.'
+
 #I recommend you leave this number as it is.
 # If you've updated your configuration with
 # values from the new update, you may change it.
-file-version: 1
+# DO NOT leave this empty, your messages will be reset!
+file-version: 2

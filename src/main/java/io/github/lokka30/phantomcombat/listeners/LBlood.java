@@ -15,10 +15,7 @@ public class LBlood implements Listener {
 
     @EventHandler
     public void onEntityDamage(final EntityDamageEvent e) {
-        if (e.isCancelled()) {
-            return;
-        }
-        if (instance.settings.getBoolean("blood.enable")) {
+        if (instance.settings.getBoolean("blood.enable") && !e.isCancelled()) {
             final Entity entity = e.getEntity();
             if (instance.settings.getStringList("blood.enabled-worlds").contains(entity.getWorld().getName())) {
                 if (entity instanceof Player) {

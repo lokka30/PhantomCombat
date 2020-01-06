@@ -83,7 +83,19 @@ death-coords:
   on-death: '&a&lPhantomCombat: &7To view where you last died at, run &a/deathcoords&7. '
   disabled: '&a&lPhantomCombat: &7The Death-Coords module is disabled.'
 
+grace-period:
+  started: '&a&lPhantomCombat: &7Grace period started! You have &a%time% seconds&7 of defence against other players.'
+  target-protected: '&a&lPhantomCombat: &f%target%&7 is under grace protection.'
+  target-broke-period: '&a&lPhantomCombat: &f%target%&7 broke their grace period and can attack you!'
+  broke-period: '&a&lPhantomCombat: &7You broke your grace period, players may now attack you!'
+  ended: '&a&lPhantomCombat: &7Your grace period ended.'
+
+  #Commands
+  usage: '&a&lPhantomCombat: &7Usage: &a/graceperiod forceStart <player>'
+  force-started: '&a&lPhantomCombat: &7Force-started &r%target%&7''s grace period.'
+
 #I recommend you leave this number as it is.
 # If you've updated your configuration with
 # values from the new update, you may change it.
-file-version: 1
+# DO NOT leave this empty, your messages will be reset!
+file-version: 2

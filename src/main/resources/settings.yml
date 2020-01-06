@@ -119,10 +119,23 @@ armor-hit-sound:
   volume: 0.7
   pitch: 1.8
 
+grace-period:
+  enable: true
+
+  #Time until expiry (seconds)
+  time: 300
+
+  #Should PhantomCombat check for a players' grace period
+  #after a scheduler, or when they next engage in combat?
+  #Defaults to true for convenience, however, setting it to
+  #false will yield better performance.
+  scheduler: true
+
 #Check for updates?
 updater: true
 
 #I recommend you leave this number as it is.
 # If you've updated your configuration with
 # values from the new update, you may change it.
-file-version: 2
+# DO NOT leave this empty, your settings will be reset!
+file-version: 3

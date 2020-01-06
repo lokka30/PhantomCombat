@@ -9,11 +9,23 @@ website: https://www.spigotmc.org/resources/%E2%9A%94-phantomcombat-%E2%9A%94-en
 
 commands:
   phantomcombat:
-    description: Plugin information.
+    description: View some plugin information.
     aliases: [combat]
   stats:
     aliases: [pvpstats, stat, kills, deaths, kdr]
-    description: View your own or anothers combat stats
+    description: View a targets PvP stats.
   deathcoords:
     aliases: [deathcoordinates, deathcoord, deathlocation, deathloc]
-    description: The location of your last death.
+    description: View the location of your last death.
+  graceperiod:
+    description: Manage a targets grace period.
+
+permissions:
+  phantomcombat.*:
+    default: op
+    description: all permissions
+    children:
+      phantomcombat.grace-period: true
+  phantomcombat.grace-period:
+    description: manage grace period
+    default: op

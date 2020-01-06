@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CStats implements CommandExecutor {
@@ -52,7 +53,7 @@ public class CStats implements CommandExecutor {
         final String path = "stats." + uuid + ".";
         final String kills = instance.data.getOrSetDefault(path + "kills", "0");
         final String deaths = instance.data.getOrSetDefault(path + "deaths", "0");
-        final String kdr = getKDR(Integer.parseInt(kills), Integer.parseInt(deaths));
+        final String kdr = getKDR(Double.parseDouble(kills), Double.parseDouble(deaths));
         final String killstreak = instance.data.getOrSetDefault(path + "killstreak", "0");
         final String highestKillstreak = instance.data.getOrSetDefault(path + "highest-killstreak", "0");
 
@@ -68,13 +69,12 @@ public class CStats implements CommandExecutor {
         }
     }
 
-    public String getKDR(int kills, int deaths) {
-        if (deaths == 0 && kills != 0) {
-            return String.valueOf(kills);
-        } else if (deaths == 0 || kills == 0) {
+    public String getKDR(double kills, double deaths) {
+        if (deaths == 0 || kills == 0) {
             return "Undetermined";
         } else {
-            return String.valueOf(kills / deaths);
+            final DecimalFormat format = new DecimalFormat("#.##");
+            return String.valueOf(format.format(kills / deaths));
         }
     }
 }

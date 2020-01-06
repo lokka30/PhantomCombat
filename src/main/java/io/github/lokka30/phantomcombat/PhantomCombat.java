@@ -3,6 +3,7 @@ package io.github.lokka30.phantomcombat;
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.internal.FlatFile;
 import io.github.lokka30.phantomcombat.commands.CDeathCoords;
+import io.github.lokka30.phantomcombat.commands.CGracePeriod;
 import io.github.lokka30.phantomcombat.commands.CPhantomCombat;
 import io.github.lokka30.phantomcombat.commands.CStats;
 import io.github.lokka30.phantomcombat.listeners.*;
@@ -26,6 +27,10 @@ public class PhantomCombat extends JavaPlugin {
     public FlatFile data;
     boolean configEnabled = false;
 
+    final int settingsCurrentVer = 3;
+    final int messagesCurrentVer = 2;
+    final int dataCurrentVer = 1;
+
     public static PhantomCombat getInstance() {
         return instance;
     }
@@ -37,7 +42,7 @@ public class PhantomCombat extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log(LogLevel.STATUS, "&8[&7Loading&8] PhantomCombat&7 developed by lokka30");
+        log(LogLevel.STATUS, "&8[&7Loading&8] &7PhantomCombat, developed by lokka30.");
 
         log(LogLevel.STATUS, "&8[&71/5&8] &7Checking compatibility...");
         checkCompatibility();
@@ -61,7 +66,7 @@ public class PhantomCombat extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        log(LogLevel.STATUS, "&8[&7Disabling&8] PhantomCombat&7 developed by lokka30");
+        log(LogLevel.STATUS, "&8[&7Disabling&8] &7PhantomCombat, developed by lokka30.");
 
         log(LogLevel.STATUS, "&8[&71/1&8] &7Unregistering instance...");
         instance = null;
@@ -101,14 +106,30 @@ public class PhantomCombat extends JavaPlugin {
                 .createJson();
 
         if (settings.get("file-version") == null) {
+            log(LogLevel.WARNING, "Unable to retrieve settings file-version, default file installed.");
             saveResource("settings.yml", true);
+        } else {
+            if (settings.getInt("file-version") != settingsCurrentVer) {
+                log(LogLevel.WARNING, "Your settings file is outdated!");
+            }
         }
+
         if (messages.get("file-version") == null) {
+            log(LogLevel.WARNING, "Unable to retrieve messages file-version, default file installed.");
             saveResource("messages.yml", true);
+        } else {
+            if (messages.getInt("file-version") != messagesCurrentVer) {
+                log(LogLevel.WARNING, "Your messages file is outdated!");
+            }
         }
+
         if (data.get("file-version") == null) {
+            log(LogLevel.WARNING, "Unable to retrieve data file-version, default file installed.");
             saveResource("data.json", true);
-            data.set("file-version", 1);
+        } else {
+            if (data.getInt("file-version") != dataCurrentVer) {
+                log(LogLevel.WARNING, "Your data file is outdated!");
+            }
         }
 
         configEnabled = true;
@@ -124,6 +145,7 @@ public class PhantomCombat extends JavaPlugin {
         pm.registerEvents(new LDeathCoords(), this);
         pm.registerEvents(new LBlood(), this);
         pm.registerEvents(new LArmorHitSound(), this);
+        pm.registerEvents(new LGracePeriod(), this);
     }
 
     /*
@@ -133,6 +155,7 @@ public class PhantomCombat extends JavaPlugin {
         Objects.requireNonNull(getCommand("stats")).setExecutor(new CStats());
         Objects.requireNonNull(getCommand("deathcoords")).setExecutor(new CDeathCoords());
         Objects.requireNonNull(getCommand("phantomcombat")).setExecutor(new CPhantomCombat());
+        Objects.requireNonNull(getCommand("graceperiod")).setExecutor(new CGracePeriod());
     }
 
     /*

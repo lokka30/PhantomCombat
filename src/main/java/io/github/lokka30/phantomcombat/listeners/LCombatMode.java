@@ -31,7 +31,7 @@ public class LCombatMode implements Listener {
 
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent e) {
-        if (instance.settings.getBoolean("combat-mode.enable")) {
+        if (instance.settings.getBoolean("combat-mode.enable") && !e.isCancelled()) {
             List<String> enabledWorlds = instance.settings.getStringList("combat-mode.enabled-worlds");
             List<String> enabledGameModes = instance.settings.getStringList("combat-mode.enabled-gamemodes");
             boolean combatCausePlayer = instance.settings.getBoolean("combat-mode.enabled-combat-causes.player");
@@ -72,7 +72,7 @@ public class LCombatMode implements Listener {
     @EventHandler
     public void onDamage(final EntityDamageEvent e) {
         final EntityDamageEvent.DamageCause cause = e.getCause();
-        if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+        if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK || cause == EntityDamageEvent.DamageCause.SUICIDE || e.isCancelled()) {
             return;
         }
         if (instance.settings.getBoolean("combat-mode.enable")) {
