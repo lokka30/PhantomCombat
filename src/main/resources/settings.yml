@@ -30,19 +30,17 @@ combat-mode:
     entity: true
 
     #generic: damage was from a generic cause, e.g. contact with a cactus, fall damage...
-    generic: true
+    generic: false
 
   #Time until combat mode expires, in seconds.
   time: 15
 
-  #Should the player be killed if they leave whilst in combat mode?
-  # Disabling this means that there are no punishments for combat mode,
-  # rendering it pretty useless. This option is here anyways :)
-  kill-tagged-player-on-quit: true
-
   effects:
-    #If a player leaves whilst in combat mode, should they have a lightning effect struck at their location?
-    lightning-strike-on-quit: true
+    #Effects of when a user leaves whilst in combat mode.
+    combat-log:
+      kill-player: true
+      lightning-strike-effect: true
+      broadcast-location: false
 
     #Sounds on combat started
     combat-started:
@@ -131,6 +129,19 @@ grace-period:
   #false will yield better performance.
   scheduler: true
 
+  #In what ways can the grace period messages be communicated?
+  communication:
+    chat: true
+    action-bar: false
+
+pvp-settings:
+  #Should the 1.9 hit delay be removed?
+  no-hit-delay: false
+
+pvp-toggle:
+  #Should the PvP-Toggle module be enabled?
+  enable: true
+
 #Check for updates?
 updater: true
 
@@ -138,4 +149,4 @@ updater: true
 # If you've updated your configuration with
 # values from the new update, you may change it.
 # DO NOT leave this empty, your settings will be reset!
-file-version: 3
+file-version: 6

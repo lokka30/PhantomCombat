@@ -9,23 +9,55 @@ website: https://www.spigotmc.org/resources/%E2%9A%94-phantomcombat-%E2%9A%94-en
 
 commands:
   phantomcombat:
-    description: View some plugin information.
+    description: View plugin information.
     aliases: [combat]
+    usage: /phantomcombat
   stats:
     aliases: [pvpstats, stat, kills, deaths, kdr]
     description: View a targets PvP stats.
+    usage: /stats [target]
   deathcoords:
     aliases: [deathcoordinates, deathcoord, deathlocation, deathloc]
-    description: View the location of your last death.
+    description: View the location of your last death.\
+    usage: /deathcoords [target]
   graceperiod:
     description: Manage a targets grace period.
+    usage: /graceperiod forceStart <target>
+  pvptoggle:
+    description: Toggle your PvP status.
+    usage: /pvptoggle <on/off> [target]
+    aliases: [pvp, pvpt, togglepvp, tpvp]
 
 permissions:
   phantomcombat.*:
     default: op
     description: all permissions
     children:
+      phantomcombat.armor-hit-sound: true
+      phantomcombat.death-coords: true
+      phantomcombat.death-coords.others: true
       phantomcombat.grace-period: true
+      phantomcombat.stats: true
+      phantomcombat.stats.others: true
+  phantomcombat.armor-hit-sound:
+    description: play a sound when you get hit with armor on
+    default: true
+  phantomcombat.death-coords:
+    description: check your death coords
+    default: true
+  phantomcombat.death-coords.others:
+    description: view others death coords
+    default: op
+    children:
+      phantomcombat.death-coords: true
   phantomcombat.grace-period:
     description: manage grace period
     default: op
+  phantomcombat.stats:
+    description: view your stats
+    default: true
+  phantomcombat.stats.others:
+    description: view others stats
+    default: true
+    children:
+      phantomcombat.stats: true

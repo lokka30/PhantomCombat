@@ -13,27 +13,29 @@ public class LArmorHitSound implements Listener {
 
     @EventHandler
     public void onDamage(final EntityDamageEvent e) {
-        if (instance.settings.getBoolean("armor-hit-sound.enable")) {
+        if (instance.settings.getBoolean("armor-hit-sound.enable") && !e.isCancelled()) {
             if (e.getEntity() instanceof Player) {
                 final Player p = (Player) e.getEntity();
-                if (p.getInventory().getHelmet() != null
-                        || p.getInventory().getChestplate() != null
-                        || p.getInventory().getLeggings() != null
-                        || p.getInventory().getBoots() != null) {
-                    switch (e.getCause()) {
-                        case ENTITY_ATTACK:
-                            break;
-                        case ENTITY_SWEEP_ATTACK:
-                            break;
-                        default:
-                            return;
+                if (p.hasPermission("phantomcombat.armor-hit-sound")) {
+                    if (p.getInventory().getHelmet() != null
+                            || p.getInventory().getChestplate() != null
+                            || p.getInventory().getLeggings() != null
+                            || p.getInventory().getBoots() != null) {
+                        switch (e.getCause()) {
+                            case ENTITY_ATTACK:
+                                break;
+                            case ENTITY_SWEEP_ATTACK:
+                                break;
+                            default:
+                                return;
+                        }
+
+                        Sound sound = Sound.valueOf(instance.settings.getString("armor-hit-sound.sound"));
+                        float volume = instance.settings.getFloat("armor-hit-sound.volume");
+                        float pitch = instance.settings.getFloat("armor-hit-sound.pitch");
+
+                        p.getWorld().playSound(p.getLocation(), sound, volume, pitch);
                     }
-
-                    Sound sound = Sound.valueOf(instance.settings.getString("armor-hit-sound.sound"));
-                    float volume = instance.settings.getFloat("armor-hit-sound.volume");
-                    float pitch = instance.settings.getFloat("armor-hit-sound.pitch");
-
-                    p.getWorld().playSound(p.getLocation(), sound, volume, pitch);
                 }
             }
         }

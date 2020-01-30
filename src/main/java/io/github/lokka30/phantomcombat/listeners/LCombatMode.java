@@ -96,13 +96,22 @@ public class LCombatMode implements Listener {
         final UUID uuid = p.getUniqueId();
 
         if (combatMap.containsKey(uuid)) {
-            if (instance.settings.getBoolean("combat-mode.kill-tagged-player-on-quit")) {
+            if (instance.settings.getBoolean("combat-mode.effects.combat-log.kill-player")) {
                 p.setHealth(0.0D);
             }
-            if (instance.settings.getBoolean("combat-mode.effects.lightning-strike-on-quit")) {
+            if (instance.settings.getBoolean("combat-mode.effects.combat-log.lightning-strike-on-quit")) {
                 p.getWorld().strikeLightningEffect(p.getLocation());
             }
+
             Bukkit.broadcastMessage(instance.colorize(instance.messages.getString("combat-mode.player-left-in-combat").replaceAll("%player%", p.getName())));
+
+            if (instance.settings.getBoolean("combat-mode.effects.combat-log.broadcast-location")) {
+                Bukkit.broadcastMessage(instance.colorize(instance.messages.getString("combat-mode.player-left-in-combat-location")
+                        .replaceAll("%x%", p.getLocation().getBlockX() + "")
+                        .replaceAll("%y%", p.getLocation().getBlockY() + "")
+                        .replaceAll("%z%", p.getLocation().getBlockZ() + "")
+                        .replaceAll("%world%", p.getLocation().getWorld().getName())));
+            }
         }
     }
 
@@ -223,7 +232,11 @@ public class LCombatMode implements Listener {
 
                     if (useBossBar) {
                         //Update the boss bar %time%
-                        bossBar.setTitle(instance.colorize(instance.messages.getString(bossBarPath + "counter").replaceAll("%time%", String.valueOf(current))));
+                        String plural = "";
+                        if (time != 1) {
+                            plural = "s";
+                        }
+                        bossBar.setTitle(instance.colorize(instance.messages.getString(bossBarPath + "counter").replaceAll("%time%", String.valueOf(current)).replaceAll("%s%", plural)));
                     }
 
                     //If the timer is complete, cancel.

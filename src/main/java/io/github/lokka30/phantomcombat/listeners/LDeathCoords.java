@@ -14,13 +14,15 @@ public class LDeathCoords implements Listener {
     public void onDeath(final PlayerDeathEvent e) {
         if (instance.settings.getBoolean("death-coords.enable")) {
             final Player p = e.getEntity();
-            final String uuid = p.getUniqueId().toString();
-            final String path = "death-coords." + uuid + ".";
-            instance.data.set(path + "x", String.valueOf(p.getLocation().getBlockX()));
-            instance.data.set(path + "y", String.valueOf(p.getLocation().getBlockY()));
-            instance.data.set(path + "z", String.valueOf(p.getLocation().getBlockZ()));
-            instance.data.set(path + "world", p.getWorld().getName());
-            p.sendMessage(instance.colorize(instance.messages.getString("death-coords.on-death")));
+            if (p.hasPermission("phantomcombat.death-coords")) {
+                final String uuid = p.getUniqueId().toString();
+                final String path = "death-coords." + uuid + ".";
+                instance.data.set(path + "x", String.valueOf(p.getLocation().getBlockX()));
+                instance.data.set(path + "y", String.valueOf(p.getLocation().getBlockY()));
+                instance.data.set(path + "z", String.valueOf(p.getLocation().getBlockZ()));
+                instance.data.set(path + "world", p.getWorld().getName());
+                p.sendMessage(instance.colorize(instance.messages.getString("death-coords.on-death")));
+            }
         }
     }
 }

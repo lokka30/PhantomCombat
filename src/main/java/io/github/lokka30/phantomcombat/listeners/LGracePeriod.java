@@ -25,7 +25,7 @@ public class LGracePeriod implements Listener {
 
         graceMap.put(uuid, Instant.now());
 
-        p.sendMessage(instance.colorize(instance.messages.getString("grace-period.started").replaceAll("%time%", String.valueOf(time))));
+        graceMessage(p, instance.colorize(instance.messages.getString("grace-period.started").replaceAll("%time%", String.valueOf(time))));
 
         //Is the scheduler enabled? Start a timer to remove their grace period.
         if (instance.settings.getBoolean("grace-period.scheduler")) {
@@ -36,7 +36,7 @@ public class LGracePeriod implements Listener {
 
                     //Check if they're online, in case they log off during the period.
                     if (p.isOnline()) {
-                        p.sendMessage(instance.colorize(instance.messages.getString("grace-period.ended")));
+                        graceMessage(p, instance.colorize(instance.messages.getString("grace-period.ended")));
                     }
                 }
             }.runTaskLater(instance, 20 * time);
@@ -51,6 +51,17 @@ public class LGracePeriod implements Listener {
         }
     }
 
+    public static void graceMessage(final Player p, final String msg) {
+        PhantomCombat instance = PhantomCombat.getInstance();
+
+        if (instance.settings.getBoolean("grace-period.communication.chat")) {
+            p.sendMessage(instance.colorize(msg));
+        }
+        if (instance.settings.getBoolean("grace-period.communication.action-bar")) {
+            instance.actionBar(p, instance.colorize(msg));
+        }
+    }
+
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent e) {
         if (instance.settings.getBoolean("grace-period.enable") && !e.isCancelled()) {
@@ -60,11 +71,11 @@ public class LGracePeriod implements Listener {
 
                 if (checkGrace(defender)) {
                     e.setCancelled(true);
-                    attacker.sendMessage(instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
+                    graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
                 } else {
                     if (checkGrace(attacker)) {
-                        defender.sendMessage(instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
-                        attacker.sendMessage(instance.colorize(instance.messages.getString("grace-period.broke-period")));
+                        graceMessage(defender, instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
+                        graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.broke-period")));
                         graceMap.remove(attacker.getUniqueId());
                     }
                 }
@@ -86,7 +97,7 @@ public class LGracePeriod implements Listener {
 
                 final Duration duration = Duration.between(start, now);
                 if (duration.getSeconds() >= instance.settings.getInt("grace-period.time")) {
-                    p.sendMessage(instance.colorize(instance.messages.getString("grace-period.ended")));
+                    graceMessage(p, instance.messages.getString("grace-period.ended"));
                     return false;
                 } else {
                     return true;

@@ -2,10 +2,7 @@ package io.github.lokka30.phantomcombat;
 
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.internal.FlatFile;
-import io.github.lokka30.phantomcombat.commands.CDeathCoords;
-import io.github.lokka30.phantomcombat.commands.CGracePeriod;
-import io.github.lokka30.phantomcombat.commands.CPhantomCombat;
-import io.github.lokka30.phantomcombat.commands.CStats;
+import io.github.lokka30.phantomcombat.commands.*;
 import io.github.lokka30.phantomcombat.listeners.*;
 import io.github.lokka30.phantomcombat.utils.UpdateChecker;
 import net.md_5.bungee.api.ChatMessageType;
@@ -18,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class PhantomCombat extends JavaPlugin {
 
@@ -27,7 +25,7 @@ public class PhantomCombat extends JavaPlugin {
     public FlatFile data;
     boolean configEnabled = false;
 
-    final int settingsCurrentVer = 3;
+    final int settingsCurrentVer = 4;
     final int messagesCurrentVer = 2;
     final int dataCurrentVer = 1;
 
@@ -42,36 +40,32 @@ public class PhantomCombat extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log(LogLevel.STATUS, "&8[&7Loading&8] &7PhantomCombat, developed by lokka30.");
+        log(LogLevel.INFO, "&8&m+-----------------------------+");
 
-        log(LogLevel.STATUS, "&8[&71/5&8] &7Checking compatibility...");
+        log(LogLevel.INFO, "&8[&71/5&8] &7Checking compatibility...");
         checkCompatibility();
 
-        log(LogLevel.STATUS, "&8[&72/5&8] &7Managing configurations...");
-        manageConfigs();
+        log(LogLevel.INFO, "&8[&72/5&8] &7Loading files...");
+        loadFiles();
 
-        log(LogLevel.STATUS, "&8[&73/5&8] &7Registering events...");
+        log(LogLevel.INFO, "&8[&73/5&8] &7Registering events...");
         registerEvents();
 
-        log(LogLevel.STATUS, "&8[&74/5&8] &7Registering commands...");
+        log(LogLevel.INFO, "&8[&74/5&8] &7Registering commands...");
         registerCommands();
 
-        log(LogLevel.STATUS, "&8[&75/5&8] &7Setting up bStats metrics...");
+        log(LogLevel.INFO, "&8[&75/5&8] &7Setting up bStats metrics...");
         new Metrics(this);
 
-        log(LogLevel.STATUS, "&8[&7Loaded&8]&7 Thank you for chosing PhantomCombat!");
+        log(LogLevel.INFO, "&8[&7Loaded&8]&7 Thank you for choosing PhantomCombat!");
+        log(LogLevel.INFO, "&8&m+-----------------------------+");
 
         checkUpdates();
     }
 
     @Override
     public void onDisable() {
-        log(LogLevel.STATUS, "&8[&7Disabling&8] &7PhantomCombat, developed by lokka30.");
-
-        log(LogLevel.STATUS, "&8[&71/1&8] &7Unregistering instance...");
         instance = null;
-
-        log(LogLevel.STATUS, "&8[&7Disabled&8]&7 Goodbye :(");
     }
 
     /*
@@ -84,14 +78,14 @@ public class PhantomCombat extends JavaPlugin {
 
         assert suggestedVersion != null;
         if (!getServer().getVersion().contains(suggestedVersion)) {
-            log(LogLevel.WARNING, "&8[&71/5&8] &7You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7.");
+            log(LogLevel.WARNING, "You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7.");
         }
     }
 
     /*
     Sets up the files from LightningStorage.
      */
-    public void manageConfigs() {
+    public void loadFiles() {
         settings = LightningBuilder
                 .fromFile(new File("plugins/PhantomCombat/settings"))
                 .addInputStreamFromResource("settings.yml")
@@ -146,6 +140,8 @@ public class PhantomCombat extends JavaPlugin {
         pm.registerEvents(new LBlood(), this);
         pm.registerEvents(new LArmorHitSound(), this);
         pm.registerEvents(new LGracePeriod(), this);
+        pm.registerEvents(new LPvPSettings(), this);
+        pm.registerEvents(new LPvPToggle(), this);
     }
 
     /*
@@ -156,6 +152,7 @@ public class PhantomCombat extends JavaPlugin {
         Objects.requireNonNull(getCommand("deathcoords")).setExecutor(new CDeathCoords());
         Objects.requireNonNull(getCommand("phantomcombat")).setExecutor(new CPhantomCombat());
         Objects.requireNonNull(getCommand("graceperiod")).setExecutor(new CGracePeriod());
+        Objects.requireNonNull(getCommand("pvptoggle")).setExecutor(new CPvPToggle());
     }
 
     /*
@@ -163,45 +160,39 @@ public class PhantomCombat extends JavaPlugin {
      */
     public void checkUpdates() {
         if (settings.getBoolean("updater")) {
-            log(LogLevel.STATUS, "&8[&7Updater&8] &7Checking for updates...");
+            log(LogLevel.INFO, "&8[&7Updater&8] &7Checking for updates...");
             new UpdateChecker(this, 12345).getVersion(version -> {
                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                    log(LogLevel.STATUS, "&8[&7Updater&8] &7You have the latest version installed.");
+                    log(LogLevel.INFO, "&8[&7Updater&8] &7You have the latest version installed.");
                 } else {
-                    log(LogLevel.INFO, "&8[&7Updater&8] &a&nA new update is available for download.");
+                    log(LogLevel.INFO, "&8[&7Updater&8] &aA new update is available for download!");
                 }
             });
         }
     }
 
-    public String colorize(String msg) {
+    public String colorize(final String msg) {
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
-    public void log(LogLevel level, String msg) {
-        String prefix;
+    public void log(final LogLevel level, final String msg) {
+        final Logger logger = getLogger();
         switch (level) {
-            case STATUS:
-                prefix = "&7STATUS";
-                break;
             case INFO:
-                prefix = "&fINFO";
+                logger.info(colorize("&7" + msg));
                 break;
             case WARNING:
-                prefix = "&eWARNING";
+                logger.warning(colorize("&7" + msg));
                 break;
             case SEVERE:
-                prefix = "&cSEVERE";
+                logger.severe(colorize("&7" + msg));
                 break;
             default:
-                prefix = "&0Invalid Log Level!";
-                break;
+                throw new IllegalStateException("Unexpected LogLevel: " + level);
         }
-
-        getServer().getConsoleSender().sendMessage(colorize("&8[" + prefix + "&8] &a&lPhantomCombat: &7" + msg));
     }
 
-    public void actionBar(Player p, String msg) {
+    public void actionBar(final Player p, final String msg) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(colorize(msg)));
     }
 
