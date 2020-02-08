@@ -135,7 +135,7 @@ grace-period:
     action-bar: false
 
 pvp-settings:
-  #Should the 1.9 hit delay be removed?
+  #Should the 1.9 Combat Update hit delay be removed?
   no-hit-delay: false
 
 pvp-toggle:

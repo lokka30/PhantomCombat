@@ -2,6 +2,7 @@ package io.github.lokka30.phantomcombat;
 
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.exception.LightningValidationException;
 import io.github.lokka30.phantomcombat.commands.*;
 import io.github.lokka30.phantomcombat.listeners.*;
 import io.github.lokka30.phantomcombat.utils.UpdateChecker;
@@ -25,7 +26,7 @@ public class PhantomCombat extends JavaPlugin {
     public FlatFile data;
     boolean configEnabled = false;
 
-    final int settingsCurrentVer = 4;
+    final int settingsCurrentVer = 6;
     final int messagesCurrentVer = 2;
     final int dataCurrentVer = 1;
 
@@ -78,7 +79,7 @@ public class PhantomCombat extends JavaPlugin {
 
         assert suggestedVersion != null;
         if (!getServer().getVersion().contains(suggestedVersion)) {
-            log(LogLevel.WARNING, "You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7.");
+            log(LogLevel.WARNING, "You are running an unsupported server version: '&a" + currentVersion + "&7'. Please switch to &a" + suggestedVersion + "&7, otherwise you will not get support for any issues you have.");
         }
     }
 
@@ -86,43 +87,65 @@ public class PhantomCombat extends JavaPlugin {
     Sets up the files from LightningStorage.
      */
     public void loadFiles() {
-        settings = LightningBuilder
-                .fromFile(new File("plugins/PhantomCombat/settings"))
-                .addInputStreamFromResource("settings.yml")
-                .createYaml();
-        messages = LightningBuilder
-                .fromFile(new File("plugins/PhantomCombat/messages"))
-                .addInputStreamFromResource("messages.yml")
-                .createYaml();
-        data = LightningBuilder
-                .fromFile(new File("plugins/PhantomCombat/data"))
-                .addInputStreamFromResource("data.json")
-                .createJson();
+        final PluginManager pm = getServer().getPluginManager();
+
+        try {
+            settings = LightningBuilder
+                    .fromFile(new File("plugins/PhantomCombat/settings"))
+                    .addInputStreamFromResource("settings.yml")
+                    .createYaml();
+        } catch (LightningValidationException e) {
+            log(LogLevel.SEVERE, "Unable to load &asettings.yml&7!");
+            pm.disablePlugin(this);
+            return;
+        }
+
+        try {
+            messages = LightningBuilder
+                    .fromFile(new File("plugins/PhantomCombat/messages"))
+                    .addInputStreamFromResource("messages.yml")
+                    .createYaml();
+        } catch (LightningValidationException e) {
+            log(LogLevel.SEVERE, "Unable to load &amessages.yml&7!");
+            pm.disablePlugin(this);
+            return;
+        }
+
+        try {
+            data = LightningBuilder
+                    .fromFile(new File("plugins/PhantomCombat/data"))
+                    .addInputStreamFromResource("data.json")
+                    .createJson();
+        } catch (LightningValidationException e) {
+            log(LogLevel.SEVERE, "Unable to load &adata.json&7!");
+            pm.disablePlugin(this);
+            return;
+        }
 
         if (settings.get("file-version") == null) {
-            log(LogLevel.WARNING, "Unable to retrieve settings file-version, default file installed.");
-            saveResource("settings.yml", true);
+            log(LogLevel.WARNING, "Unable to retrieve &asettings.yml&7 file-version. Either this is a first start or you have a broken file. If the file doesn't exist, it has been created.");
+            saveResource("settings.yml", false);
         } else {
             if (settings.getInt("file-version") != settingsCurrentVer) {
-                log(LogLevel.WARNING, "Your settings file is outdated!");
+                log(LogLevel.WARNING, "Your &asettings.yml&7 file is outdated!");
             }
         }
 
         if (messages.get("file-version") == null) {
-            log(LogLevel.WARNING, "Unable to retrieve messages file-version, default file installed.");
+            log(LogLevel.WARNING, "Unable to retrieve &amessages.yml&7 file-version. Either this is a first start or you have a broken file. If the file doesn't exist, it has been created.");
             saveResource("messages.yml", true);
         } else {
             if (messages.getInt("file-version") != messagesCurrentVer) {
-                log(LogLevel.WARNING, "Your messages file is outdated!");
+                log(LogLevel.WARNING, "Your &amessages.yml&7 file is outdated!");
             }
         }
 
         if (data.get("file-version") == null) {
-            log(LogLevel.WARNING, "Unable to retrieve data file-version, default file installed.");
+            log(LogLevel.WARNING, "Unable to retrieve &adata.json&7 file-version. Either this is a first start or you have a broken file. If the file doesn't exist, it has been created.");
             saveResource("data.json", true);
         } else {
             if (data.getInt("file-version") != dataCurrentVer) {
-                log(LogLevel.WARNING, "Your data file is outdated!");
+                log(LogLevel.WARNING, "Your &adata.json&7 file is outdated!");
             }
         }
 
@@ -160,12 +183,12 @@ public class PhantomCombat extends JavaPlugin {
      */
     public void checkUpdates() {
         if (settings.getBoolean("updater")) {
-            log(LogLevel.INFO, "&8[&7Updater&8] &7Checking for updates...");
+            log(LogLevel.INFO, "&8[&7Update Checker&8] &7Checking for updates...");
             new UpdateChecker(this, 12345).getVersion(version -> {
                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                    log(LogLevel.INFO, "&8[&7Updater&8] &7You have the latest version installed.");
+                    log(LogLevel.INFO, "&8[&7Update Checker&8] &7You have the latest version installed.");
                 } else {
-                    log(LogLevel.INFO, "&8[&7Updater&8] &aA new update is available for download!");
+                    log(LogLevel.INFO, "&8[&7Update Checker&8] &aA new update is available for download!");
                 }
             });
         }

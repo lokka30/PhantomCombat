@@ -40,7 +40,7 @@ public class CPvPToggle implements CommandExecutor {
                     } else {
                         s.sendMessage(instance.colorize(instance.messages.getString("pvp-toggle.usage-console")));
                     }
-                    break;
+                    return true;
                 case 2:
                     if (s instanceof Player && !s.hasPermission("phantomcombat.pvptoggle.others")) {
                         s.sendMessage(instance.colorize(instance.messages.getString("common.no-permission")));
@@ -68,10 +68,10 @@ public class CPvPToggle implements CommandExecutor {
                             }
                         }
                     }
-                    break;
+                    return true;
                 default:
                     s.sendMessage(instance.colorize(instance.messages.getString("pvp-toggle.usage")));
-                    break;
+                    return true;
             }
         } else {
             s.sendMessage(instance.colorize(instance.messages.getString("pvp-toggle.module-disabled")));

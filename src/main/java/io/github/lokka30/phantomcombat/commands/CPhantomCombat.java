@@ -21,7 +21,7 @@ public class CPhantomCombat implements CommandExecutor {
         s.sendMessage(instance.colorize("&8&m+--------------------------------------------+"));
         s.sendMessage(instance.colorize("&a&lCommands:"));
         s.sendMessage(instance.colorize("&8 - &2/phantomcombat &8| &7View plugin information"));
-        s.sendMessage(instance.colorize("&8 - &2/deathcoords <target>> &8| &7View your death coordinates"));
+        s.sendMessage(instance.colorize("&8 - &2/deathcoords <target> &8| &7View your death coordinates"));
         s.sendMessage(instance.colorize("&8 - &2/graceperiod forceStart <target> &8| &7Force start a grace period"));
         s.sendMessage(instance.colorize("&8 - &2/pvptoggle <on/off> [target] &8| &7Set a PvP status"));
         s.sendMessage(instance.colorize("&8 - &2/stats [p] &8| &7View your PvP stats"));
