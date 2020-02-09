@@ -6,10 +6,11 @@
 
     <groupId>io.github.lokka30</groupId>
     <artifactId>PhantomCombat</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>PhantomCombat</name>
+    <description>Empower your server's combat experience!</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -81,7 +82,11 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>io.github.lokka30.phantomcombat</shadedPattern>
+                            <shadedPattern>io.github.lokka30.phantomcombat.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.github.JavaFactoryDev</pattern>
+                            <shadedPattern>io.github.lokka30.phantomcombat.lightningstorage</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
