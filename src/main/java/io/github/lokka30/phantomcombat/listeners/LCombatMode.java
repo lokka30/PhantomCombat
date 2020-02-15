@@ -18,10 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class LCombatMode implements Listener {
 
@@ -51,10 +48,10 @@ public class LCombatMode implements Listener {
                         } else {
                             //Combat Cause: Entity
                             if (combatCauseEntity) {
-                                for (String entityTypeString : instance.settings.getStringList("combat-mode.blacklisted-entities")) {
+                                for (String entityTypeString : instance.settings.get("combat-mode.blacklisted-entities", Collections.singletonList("ARMOR_STAND, PAINTING, ITEM_FRAME"))) {
                                     if (e.getDamager().getType().name().equalsIgnoreCase(entityTypeString)) {
                                         enterCombat(defender, CombatCause.ENTITY, e.getDamager().getType().toString());
-                                        return;
+                                        break;
                                     }
                                 }
                             }
@@ -66,10 +63,10 @@ public class LCombatMode implements Listener {
                 if (enabledWorlds.contains(attacker.getWorld().getName())) {
                     if (enabledGameModes.contains(attacker.getGameMode().toString())) {
                         if (combatCauseEntity) {
-                            for (String entityTypeString : instance.settings.getStringList("combat-mode.blacklisted-entities")) {
+                            for (String entityTypeString : instance.settings.get("combat-mode.blacklisted-entities", Collections.singletonList("ARMOR_STAND, PAINTING, ITEM_FRAME"))) {
                                 if (e.getEntity().getType().name().equalsIgnoreCase(entityTypeString)) {
                                     enterCombat(attacker, CombatCause.ENTITY, e.getEntity().getType().toString());
-                                    return;
+                                    break;
                                 }
                             }
                         }
@@ -120,7 +117,7 @@ public class LCombatMode implements Listener {
                         .replaceAll("%x%", p.getLocation().getBlockX() + "")
                         .replaceAll("%y%", p.getLocation().getBlockY() + "")
                         .replaceAll("%z%", p.getLocation().getBlockZ() + "")
-                        .replaceAll("%world%", p.getLocation().getWorld().getName())));
+                        .replaceAll("%world%", Objects.requireNonNull(p.getLocation().getWorld()).getName())));
             }
         }
     }
