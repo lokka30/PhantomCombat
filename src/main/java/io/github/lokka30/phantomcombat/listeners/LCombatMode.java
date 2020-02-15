@@ -1,7 +1,7 @@
 package io.github.lokka30.phantomcombat.listeners;
 
-import io.github.lokka30.phantomcombat.CombatCause;
 import io.github.lokka30.phantomcombat.PhantomCombat;
+import io.github.lokka30.phantomcombat.utils.CombatCause;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
