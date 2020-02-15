@@ -84,6 +84,12 @@ combat-mode:
       - /tphere
       - /fly
 
+  #Entities that won't engage players into combat.
+  blacklisted-entities:
+    - ITEM_FRAME
+    - PAINTING
+    - ARMOR_STAND
+
 death-coords:
   enable: true
 
@@ -145,8 +151,6 @@ pvp-toggle:
 #Check for updates?
 updater: true
 
-#I recommend you leave this number as it is.
-# If you've updated your configuration with
-# values from the new update, you may change it.
-# DO NOT leave this empty, your settings will be reset!
-file-version: 6
+#The file version. Wouldn't recommend changing unless
+#the whole config is updated to said version.
+file-version: 7

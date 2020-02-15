@@ -51,7 +51,12 @@ public class LCombatMode implements Listener {
                         } else {
                             //Combat Cause: Entity
                             if (combatCauseEntity) {
-                                enterCombat(defender, CombatCause.ENTITY, e.getDamager().getType().toString());
+                                for (String entityTypeString : instance.settings.getStringList("combat-mode.blacklisted-entities")) {
+                                    if (e.getDamager().getType().name().equalsIgnoreCase(entityTypeString)) {
+                                        enterCombat(defender, CombatCause.ENTITY, e.getDamager().getType().toString());
+                                        return;
+                                    }
+                                }
                             }
                         }
                     }
@@ -61,7 +66,12 @@ public class LCombatMode implements Listener {
                 if (enabledWorlds.contains(attacker.getWorld().getName())) {
                     if (enabledGameModes.contains(attacker.getGameMode().toString())) {
                         if (combatCauseEntity) {
-                            enterCombat(attacker, CombatCause.ENTITY, e.getEntity().getType().toString());
+                            for (String entityTypeString : instance.settings.getStringList("combat-mode.blacklisted-entities")) {
+                                if (e.getEntity().getType().name().equalsIgnoreCase(entityTypeString)) {
+                                    enterCombat(attacker, CombatCause.ENTITY, e.getEntity().getType().toString());
+                                    return;
+                                }
+                            }
                         }
                     }
                 }
