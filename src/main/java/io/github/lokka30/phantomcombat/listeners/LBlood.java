@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.Arrays;
+
 public class LBlood implements Listener {
 
     private PhantomCombat instance = PhantomCombat.getInstance();
@@ -24,6 +26,11 @@ public class LBlood implements Listener {
                     }
                 } else {
                     if (instance.settings.getBoolean("blood.entities-bleed")) {
+                        for (String blockedEntityType : instance.settings.get("blood.blacklisted-entities", Arrays.asList("ARMOR_STAND"))) {
+                            if (entity.getType().name().equalsIgnoreCase(blockedEntityType)) {
+                                return;
+                            }
+                        }
                         bloodParticles(entity, e.getCause());
                     }
                 }

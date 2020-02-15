@@ -117,6 +117,9 @@ blood:
     contact: true
     fire: false
 
+  blacklisted-entities:
+    - ARMOR_STAND
+
 armor-hit-sound:
   enable: true
   sound: 'ENTITY_ZOMBIE_ATTACK_IRON_DOOR'
