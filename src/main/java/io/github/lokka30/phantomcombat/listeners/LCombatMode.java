@@ -50,10 +50,10 @@ public class LCombatMode implements Listener {
                             if (combatCauseEntity) {
                                 for (String entityTypeString : instance.settings.get("combat-mode.blacklisted-entities", Collections.singletonList("ARMOR_STAND, PAINTING, ITEM_FRAME"))) {
                                     if (e.getDamager().getType().name().equalsIgnoreCase(entityTypeString)) {
-                                        enterCombat(defender, CombatCause.ENTITY, e.getDamager().getType().toString());
-                                        break;
+                                        return;
                                     }
                                 }
+                                enterCombat(defender, CombatCause.ENTITY, e.getDamager().getType().toString());
                             }
                         }
                     }
@@ -65,10 +65,10 @@ public class LCombatMode implements Listener {
                         if (combatCauseEntity) {
                             for (String entityTypeString : instance.settings.get("combat-mode.blacklisted-entities", Collections.singletonList("ARMOR_STAND, PAINTING, ITEM_FRAME"))) {
                                 if (e.getEntity().getType().name().equalsIgnoreCase(entityTypeString)) {
-                                    enterCombat(attacker, CombatCause.ENTITY, e.getEntity().getType().toString());
-                                    break;
+                                    return;
                                 }
                             }
+                            enterCombat(attacker, CombatCause.ENTITY, e.getEntity().getType().toString());
                         }
                     }
                 }
