@@ -1,0 +1,20 @@
+1.11-SNAPSHOT
+- updated file library
+- pvp toggle now checks for projectiles and splash potions
+
+
+1.12.0-SNAPSHOT:
+notes:
+- settings version increased to 8
+changes:
+- added 'commands to execute from console when a player logs out during combat mode'
+- the plugin will delay the death coordinates message by a quarter of a second so it is visible after the death message spam
+- changes and fixes to 'block flight'
+ - now turns off flight when you enter combat.
+ - saves 'allow flight' state before you enter into combat. after you finish combat, if you were allowed to fly, you can start flying again.
+- updated libraries (LightningStorage 3.0.9)
+- added check if player is online during combat mode task to prevent possible NPE
+- added changelog file to github repo
+other notes:
+- sorry for lack of updates
+- added digit to plugin version for very minor changes (build number)
