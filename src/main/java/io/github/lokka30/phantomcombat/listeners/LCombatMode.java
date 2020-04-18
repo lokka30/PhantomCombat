@@ -24,6 +24,7 @@ public class LCombatMode implements Listener {
 
     HashMap<UUID, Integer> combatMap = new HashMap<>();
     ArrayList<UUID> cancel = new ArrayList<>();
+    ArrayList<Player> wasAllowedFlight = new ArrayList<>();
     private PhantomCombat instance = PhantomCombat.getInstance();
 
     @EventHandler
@@ -106,8 +107,13 @@ public class LCombatMode implements Listener {
             if (instance.settings.getBoolean("combat-mode.effects.combat-log.kill-player")) {
                 p.setHealth(0.0D);
             }
+
             if (instance.settings.getBoolean("combat-mode.effects.combat-log.lightning-strike-on-quit")) {
                 p.getWorld().strikeLightningEffect(p.getLocation());
+            }
+
+            for (String command : instance.settings.get("combat-mode.effects.combat-log.commands-executed-by-console", Collections.singletonList("say %player% combat logged."))) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", p.getName()));
             }
 
             Bukkit.broadcastMessage(instance.colorize(instance.messages.getString("combat-mode.player-left-in-combat").replaceAll("%player%", p.getName())));
@@ -220,12 +226,32 @@ public class LCombatMode implements Listener {
 
             combatStarted(p, bossBar, useBossBar, useChat, useActionBar, time, reason);
 
+            if (p.getAllowFlight()) {
+                wasAllowedFlight.add(p);
+            }
+
+            if (instance.settings.getBoolean("combat-mode.block-flight")) {
+                p.setFlying(false);
+                p.setAllowFlight(false);
+            }
+
             //Create the Combat Mode task.
             new BukkitRunnable() {
                 public void run() {
+                    if (!p.isOnline()) {
+                        cancel();
+                        combatMap.remove(uuid);
+                        cancel.remove(uuid);
+                        return;
+                    }
+
+
                     if (cancel.contains(uuid)) {
                         //the combat mode can be forced to expire, e.g. from death.
                         cancel();
+                        if (wasAllowedFlight.contains(p)) {
+                            p.setAllowFlight(true);
+                        }
                         combatMap.remove(uuid);
                         combatFinished(p, bossBar, useBossBar, useChat, useActionBar);
                         cancel.remove(uuid);

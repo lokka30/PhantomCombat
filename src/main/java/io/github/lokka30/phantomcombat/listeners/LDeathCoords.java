@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class LDeathCoords implements Listener {
 
@@ -21,7 +22,13 @@ public class LDeathCoords implements Listener {
                 instance.data.set(path + "y", String.valueOf(p.getLocation().getBlockY()));
                 instance.data.set(path + "z", String.valueOf(p.getLocation().getBlockZ()));
                 instance.data.set(path + "world", p.getWorld().getName());
-                p.sendMessage(instance.colorize(instance.messages.getString("death-coords.on-death")));
+
+                //In a runnable so it will send the message after all the other death messages.
+                new BukkitRunnable() {
+                    public void run() {
+                        p.sendMessage(instance.colorize(instance.messages.getString("death-coords.on-death")));
+                    }
+                }.runTaskLater(instance, 5L);
             }
         }
     }

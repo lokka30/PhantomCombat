@@ -38,9 +38,18 @@ combat-mode:
   effects:
     #Effects of when a user leaves whilst in combat mode.
     combat-log:
+      #Kill the player?
       kill-player: true
+
+      #Strike lightning where they logged out?
       lightning-strike-effect: true
+
+      #Broadcast where they left so players can grab their loot?
       broadcast-location: false
+
+      #These commands will be executed by console when a player combat logs.
+      #If you don't know how to add them here, please do not hesitate to contact me for help :)
+      commands-executed-by-console: []
 
     #Sounds on combat started
     combat-started:
@@ -156,4 +165,4 @@ updater: true
 
 #The file version. Wouldn't recommend changing unless
 #the whole config is updated to said version.
-file-version: 7
+file-version: 8
