@@ -6,18 +6,24 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 
-public class CStats implements CommandExecutor {
+public class StatsCommand implements CommandExecutor {
 
-    private PhantomCombat instance = PhantomCombat.getInstance();
+    private PhantomCombat instance;
+
+    public StatsCommand(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     @Override
-    public boolean onCommand(final CommandSender s, final Command cmd, final String label, final String[] args) {
+    public boolean onCommand(@NotNull final CommandSender s, @NotNull final Command cmd, @NotNull final String label, @NotNull final String[] args) {
         if (s instanceof Player && !s.hasPermission("phantomcombat.stats")) {
-            s.sendMessage(instance.colorize(instance.messages.getString("common.no-permission")));
+            s.sendMessage(instance.colorize(instance.messages.get("common.no-permission", "No permission")));
             return true;
         }
 
@@ -25,25 +31,26 @@ public class CStats implements CommandExecutor {
             if (s instanceof Player) {
                 getStats(s, (Player) s);
             } else {
-                s.sendMessage(instance.colorize(instance.messages.getString("stats.usage-console")));
+                s.sendMessage(instance.colorize(instance.messages.get("stats.usage-console", "Invalid usage for console")));
             }
             return true;
         } else if (args.length == 1) {
             if (s instanceof Player && !s.hasPermission("phantomcombat.stats.others")) {
-                s.sendMessage(instance.colorize(instance.messages.getString("common.no-permission")));
+                s.sendMessage(instance.colorize(instance.messages.get("common.no-permission", "No permission")));
                 return true;
             }
 
             final Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                s.sendMessage(instance.colorize(instance.messages.getString("common.target-offline").replaceAll("%target%", args[0])));
+                s.sendMessage(instance.colorize(instance.messages.get("common.target-offline", "Target is offline")
+                        .replaceAll("%target%", args[0])));
                 return true;
             }
 
             getStats(s, target);
             return true;
         } else {
-            s.sendMessage(instance.colorize(instance.messages.getString("stats.usage")));
+            s.sendMessage(instance.colorize(instance.messages.get("stats.usage", "Invalid usage")));
             return true;
         }
     }
@@ -57,7 +64,7 @@ public class CStats implements CommandExecutor {
         final String killstreak = instance.data.getOrSetDefault(path + "killstreak", "0");
         final String highestKillstreak = instance.data.getOrSetDefault(path + "highest-killstreak", "0");
 
-        List<String> messages = instance.messages.getStringList("stats.list");
+        List<String> messages = instance.messages.get("stats.list", Collections.singletonList("Invalid config!"));
         for (String msg : messages) {
             browser.sendMessage(instance.colorize(msg)
                     .replaceAll("%player%", target.getName())

@@ -20,16 +20,25 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class LCombatMode implements Listener {
+public class CombatModeListener implements Listener {
+
+    private PhantomCombat instance;
+
+    public CombatModeListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     HashMap<UUID, Integer> combatMap = new HashMap<>();
     ArrayList<UUID> cancel = new ArrayList<>();
     ArrayList<Player> wasAllowedFlight = new ArrayList<>();
-    private PhantomCombat instance = PhantomCombat.getInstance();
 
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent e) {
-        if (instance.settings.getBoolean("combat-mode.enable") && !e.isCancelled()) {
+        if (e.isCancelled()) {
+            return;
+        }
+        if (instance.settings.get("combat-mode.enable", true) && !e.isCancelled()) {
+            //TODO remove poor LightningStorage usage below and in the next classes.
             List<String> enabledWorlds = instance.settings.getStringList("combat-mode.enabled-worlds");
             List<String> enabledGameModes = instance.settings.getStringList("combat-mode.enabled-gamemodes");
             boolean combatCausePlayer = instance.settings.getBoolean("combat-mode.enabled-combat-causes.player");
@@ -79,6 +88,9 @@ public class LCombatMode implements Listener {
 
     @EventHandler
     public void onDamage(final EntityDamageEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         final EntityDamageEvent.DamageCause cause = e.getCause();
         if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK || cause == EntityDamageEvent.DamageCause.SUICIDE || e.isCancelled()) {
             return;
@@ -130,6 +142,9 @@ public class LCombatMode implements Listener {
 
     @EventHandler
     public void onToggleFlight(final PlayerToggleFlightEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         final Player p = e.getPlayer();
         if (instance.settings.getBoolean("combat-mode.block-flight")) {
             if (combatMap.containsKey(p.getUniqueId())) {
@@ -142,6 +157,9 @@ public class LCombatMode implements Listener {
 
     @EventHandler
     public void onTeleport(final PlayerTeleportEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         final Player p = e.getPlayer();
         if (instance.settings.getBoolean("combat-mode.block-teleport")) {
             if (combatMap.containsKey(p.getUniqueId())) {
@@ -173,6 +191,9 @@ public class LCombatMode implements Listener {
 
     @EventHandler
     public void onCommandPreProcess(final PlayerCommandPreprocessEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         final Player p = e.getPlayer();
         if (instance.settings.getBoolean("combat-mode.block-commands.enable")) {
             if (combatMap.containsKey(p.getUniqueId())) {

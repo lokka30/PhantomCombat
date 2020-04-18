@@ -19,3 +19,17 @@ changes:
 other notes:
 - sorry for lack of updates
 - added digit to plugin version for very minor changes (build number)
+
+
+1.13.0-SNAPSHOT:
+notes: []
+changes:
+- added 'isCancelled' check to all events (where possible) before they do anything
+ - Should make it so players hitting players in a protected area not put them in combat
+- several code changes (i'm surprised how far i've differed from my old coding styles)
+ - renamed classes to better names (LBlood -> BloodListener)
+ - removed statics everywhere! yay
+ - better file lib usage:
+  - half of the plugin's code now uses 'defaults', so there will be less NPEs from a bad config
+  - the other half I will get to later :)
+ - other code cleanup I forgot to write here.

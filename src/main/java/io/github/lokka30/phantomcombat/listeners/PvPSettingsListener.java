@@ -7,18 +7,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class LPvPSettings implements Listener {
+import java.util.Objects;
 
-    private PhantomCombat instance = PhantomCombat.getInstance();
+public class PvPSettingsListener implements Listener {
+
+    private PhantomCombat instance;
+
+    public PvPSettingsListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         final Player p = e.getPlayer();
 
         if (instance.settings.get("pvp-settings.no-hit-delay", false)) {
-            p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(1024.0);
+            Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(1024.0);
         } else {
-            p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
+            Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(4.0);
         }
 
         p.saveData();

@@ -7,9 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class LDeathCoords implements Listener {
+public class DeathCoordsListener implements Listener {
 
-    private PhantomCombat instance = PhantomCombat.getInstance();
+    private PhantomCombat instance;
+
+    public DeathCoordsListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     @EventHandler
     public void onDeath(final PlayerDeathEvent e) {

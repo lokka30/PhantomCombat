@@ -13,13 +13,16 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class LGracePeriod implements Listener {
+public class GracePeriodListener implements Listener {
 
-    public static HashMap<UUID, Instant> graceMap = new HashMap<>();
-    private PhantomCombat instance = PhantomCombat.getInstance();
+    public HashMap<UUID, Instant> graceMap = new HashMap<>();
+    private PhantomCombat instance;
 
-    public static void startGracePeriod(final Player p) {
-        PhantomCombat instance = PhantomCombat.getInstance();
+    public GracePeriodListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
+
+    public void startGracePeriod(final Player p) {
         final int time = instance.settings.getInt("grace-period.time");
         final UUID uuid = p.getUniqueId();
 
@@ -51,9 +54,7 @@ public class LGracePeriod implements Listener {
         }
     }
 
-    public static void graceMessage(final Player p, final String msg) {
-        PhantomCombat instance = PhantomCombat.getInstance();
-
+    public void graceMessage(final Player p, final String msg) {
         if (instance.settings.getBoolean("grace-period.communication.chat")) {
             p.sendMessage(instance.colorize(msg));
         }

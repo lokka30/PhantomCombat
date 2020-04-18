@@ -13,7 +13,7 @@ public class UpdateChecker {
 
     /*
     This is the update checker class, taken from the SpigotMC wiki at 4 January, 2020.
-    Credit to the original editors: Emilius123, patri9ck, DevCyntrix, MSWS.
+    All credit due to the editors of that wiki page.
      */
 
     private Plugin plugin;

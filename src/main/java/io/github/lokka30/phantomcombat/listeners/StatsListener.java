@@ -5,9 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class LStats implements Listener {
+public class StatsListener implements Listener {
 
-    private PhantomCombat instance = PhantomCombat.getInstance();
+    private PhantomCombat instance;
+
+    public StatsListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     @EventHandler
     public void onDeath(final PlayerDeathEvent e) {

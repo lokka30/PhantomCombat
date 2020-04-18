@@ -7,12 +7,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 
-public class LPvPToggle implements Listener {
+public class PvPToggleListener implements Listener {
 
-    private PhantomCombat instance = PhantomCombat.getInstance();
+    private PhantomCombat instance;
+
+    public PvPToggleListener(final PhantomCombat instance) {
+        this.instance = instance;
+    }
 
     @EventHandler
     public void onEntityDamageByEntity(final EntityDamageByEntityEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+
         if (instance.settings.get("pvp-toggle.enable", true)) {
             if (e.getEntity() instanceof Player) {
                 if (checkPvPToggle((Player) e.getEntity(), e.getDamager())) {
@@ -24,6 +32,10 @@ public class LPvPToggle implements Listener {
 
     @EventHandler
     public void onSplash(final PotionSplashEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+
         for (LivingEntity livingEntity : e.getAffectedEntities()) {
             if (livingEntity instanceof Player) {
                 final Player p = (Player) livingEntity;
