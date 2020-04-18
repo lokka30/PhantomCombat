@@ -15,6 +15,7 @@ changes:
 - updated libraries (LightningStorage 3.0.9)
 - added check if player is online during combat mode task to prevent possible NPE
 - added changelog file to github repo
+- fixed dropped items showing blood in lava
 other notes:
 - sorry for lack of updates
 - added digit to plugin version for very minor changes (build number)
