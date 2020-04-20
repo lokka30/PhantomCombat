@@ -33,3 +33,8 @@ changes:
   - half of the plugin's code now uses 'defaults', so there will be less NPEs from a bad config
   - the other half I will get to later :)
  - other code cleanup I forgot to write here.
+
+1.14.0-SNAPSHOT ::: NOT RELEASED YET!
+notes: []
+changes:
+- Added TempFly support!

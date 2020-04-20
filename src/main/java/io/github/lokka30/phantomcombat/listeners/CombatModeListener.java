@@ -1,5 +1,6 @@
 package io.github.lokka30.phantomcombat.listeners;
 
+import com.moneybags.tempfly.TempFly;
 import io.github.lokka30.phantomcombat.PhantomCombat;
 import io.github.lokka30.phantomcombat.utils.CombatCause;
 import org.bukkit.Bukkit;
@@ -219,9 +220,13 @@ public class CombatModeListener implements Listener {
         }
     }
 
-    public void enterCombat(final Player p, CombatCause cause, String extraInfo) {
+    public void enterCombat(final Player player, CombatCause cause, String extraInfo) {
         final int time = instance.settings.getInt("combat-mode.time");
-        final UUID uuid = p.getUniqueId();
+        final UUID uuid = player.getUniqueId();
+
+        if (Bukkit.getPluginManager().getPlugin("TempFly") != null) {
+            TempFly.getAPI().toggleTempfly(player, false, false);
+        }
 
         if (combatMap.containsKey(uuid)) {
             //Since the user is already in combat, reset their timer.
@@ -245,21 +250,21 @@ public class CombatModeListener implements Listener {
             BarStyle barStyle = BarStyle.valueOf(instance.messages.getString(bossBarPath + "barStyle"));
             BossBar bossBar = Bukkit.createBossBar(barTitle, barColor, barStyle);
 
-            combatStarted(p, bossBar, useBossBar, useChat, useActionBar, time, reason);
+            combatStarted(player, bossBar, useBossBar, useChat, useActionBar, time, reason);
 
-            if (p.getAllowFlight()) {
-                wasAllowedFlight.add(p);
+            if (player.getAllowFlight()) {
+                wasAllowedFlight.add(player);
             }
 
             if (instance.settings.getBoolean("combat-mode.block-flight")) {
-                p.setFlying(false);
-                p.setAllowFlight(false);
+                player.setFlying(false);
+                player.setAllowFlight(false);
             }
 
             //Create the Combat Mode task.
             new BukkitRunnable() {
                 public void run() {
-                    if (!p.isOnline()) {
+                    if (!player.isOnline()) {
                         cancel();
                         combatMap.remove(uuid);
                         cancel.remove(uuid);
@@ -270,11 +275,11 @@ public class CombatModeListener implements Listener {
                     if (cancel.contains(uuid)) {
                         //the combat mode can be forced to expire, e.g. from death.
                         cancel();
-                        if (wasAllowedFlight.contains(p)) {
-                            p.setAllowFlight(true);
+                        if (wasAllowedFlight.contains(player)) {
+                            player.setAllowFlight(true);
                         }
                         combatMap.remove(uuid);
-                        combatFinished(p, bossBar, useBossBar, useChat, useActionBar);
+                        combatFinished(player, bossBar, useBossBar, useChat, useActionBar);
                         cancel.remove(uuid);
                         return;
                     }
@@ -298,7 +303,7 @@ public class CombatModeListener implements Listener {
                         cancel();
                         combatMap.remove(uuid);
                         cancel.remove(uuid);
-                        combatFinished(p, bossBar, useBossBar, useChat, useActionBar);
+                        combatFinished(player, bossBar, useBossBar, useChat, useActionBar);
                     }
                 }
             }.runTaskTimer(instance, 0, 20);
