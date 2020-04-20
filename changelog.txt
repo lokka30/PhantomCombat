@@ -34,7 +34,7 @@ changes:
   - the other half I will get to later :)
  - other code cleanup I forgot to write here.
 
-1.14.0-SNAPSHOT ::: NOT RELEASED YET!
+1.14.0-SNAPSHOT
 notes: []
 changes:
 - Added TempFly support!
