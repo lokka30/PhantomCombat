@@ -38,3 +38,8 @@ changes:
 notes: []
 changes:
 - Added TempFly support!
+
+1.14.1-SNAPSHOT
+- Updated 'settings.yml' + increased its version to 9
+- Added 'remove combat on gamemode switch' so admins switching to creative mode no longer have combat mode on (allows them to fly as well)
+- Fixed missing file defaults in 'CombatModeListener', still need to fix the defaults in the classes 'DeathCoordsListener', 'GracePeriodListener', 'PvPSettingsListener', 'PvPToggleListener' and 'StatsListener'.

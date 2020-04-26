@@ -4,7 +4,7 @@
 # Popular link: https://yaml-online-parser.appspot.com/
 #
 #For support, please open a private message to lokka30.
-# Attempting to get support in reviews may revoke my assistance.
+#Attempting to get support in reviews may revoke my assistance.
 
 #It might be frustrating when your enemy logs out whilst in battle. Combat mode solves that.
 combat-mode:
@@ -18,8 +18,8 @@ combat-mode:
 
   #What gamemodes should combat mode take effect? Must be in uppercase.
   enabled-gamemodes:
-    - SURVIVAL
-    - ADVENTURE
+    - 'SURVIVAL'
+    - 'ADVENTURE'
 
   #What combat causes should engage the defender in combat?
   enabled-combat-causes:
@@ -54,18 +54,23 @@ combat-mode:
     #Sounds on combat started
     combat-started:
       enable: true
-      sound: ENTITY_EXPERIENCE_ORB_PICKUP
+      sound: 'ENTITY_EXPERIENCE_ORB_PICKUP'
       volume: 1.0
       pitch: 0.0
 
     #Sounds on combat finished
     combat-finished:
       enable: true
-      sound: ENTITY_PLAYER_LEVELUP
+      sound: 'ENTITY_PLAYER_LEVELUP'
       volume: 1.0
       pitch: 2.0
 
+  # Should flight be disabled on combat mode? (If they were flying previously, it will allow them to fly again after.)
   block-flight: false
+
+  # Should combat mode be removed when the player switches to spectator or creative mode?
+  # This will allow them to fly again if 'block-flight' is off too.
+  remove-on-gamemode-switch: true
 
   #Block all teleports (including plugin-caused)?
   block-teleport: false
@@ -74,8 +79,8 @@ combat-mode:
   block-items:
     enable: true
     items:
-      - ENDER_PEARL
-      - CHORUS_FRUIT
+      - 'ENDER_PEARL'
+      - 'CHORUS_FRUIT'
 
   #Block commands from being processed in combat mode.
   block-commands:
@@ -83,21 +88,21 @@ combat-mode:
 
     #commands must contain a starting slash
     commands:
-      - /tpa
-      - /tpaccept
-      - /tpdeny
-      - /spawn
-      - /home
-      - /warp
-      - /tp
-      - /tphere
-      - /fly
+      - '/tpa'
+      - '/tpaccept'
+      - '/tpdeny'
+      - '/spawn'
+      - '/home'
+      - '/warp'
+      - '/tp'
+      - '/tphere'
+      - '/fly'
 
   #Entities that won't engage players into combat.
   blacklisted-entities:
-    - ITEM_FRAME
-    - PAINTING
-    - ARMOR_STAND
+    - 'ITEM_FRAME'
+    - 'PAINTING'
+    - 'ARMOR_STAND'
 
 death-coords:
   enable: true
@@ -107,9 +112,9 @@ blood:
 
   #What worlds should bleeding take effect?
   enabled-worlds:
-    - world
-    - world_nether
-    - world_the_end
+    - 'world'
+    - 'world_nether'
+    - 'world_the_end'
 
   #Should entities bleed (not players)?
   entities-bleed: true
@@ -127,8 +132,8 @@ blood:
     fire: false
 
   blacklisted-entities:
-    - ARMOR_STAND
-    - DROPPED_ITEM
+    - 'ARMOR_STAND'
+    - 'DROPPED_ITEM'
 
 armor-hit-sound:
   enable: true
@@ -153,17 +158,21 @@ grace-period:
     chat: true
     action-bar: false
 
+# PvP settings.
 pvp-settings:
-  #Should the 1.9 Combat Update hit delay be removed?
+
+  # Should the 1.9 Combat Update hit delay be removed?
+  # You must relog if you change this otherwise you will have the old delay still.
   no-hit-delay: false
 
+# Settings for 'pvp toggle'.
 pvp-toggle:
-  #Should the PvP-Toggle module be enabled?
+
+  # Should the PvP-Toggle module be enabled?
   enable: true
 
-#Check for updates?
+# Should PhantomCombat check if you are running the latest version?
 updater: true
 
-#The file version. Wouldn't recommend changing unless
-#the whole config is updated to said version.
-file-version: 8
+# Don't touch this unless you know what you're doing.
+file-version: 9

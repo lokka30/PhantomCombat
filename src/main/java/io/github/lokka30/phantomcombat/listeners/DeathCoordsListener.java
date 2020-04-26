@@ -8,7 +8,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeathCoordsListener implements Listener {
-
+    //TODO remove poor LightningStorage usage below and in the next classes.
     private PhantomCombat instance;
 
     public DeathCoordsListener(final PhantomCombat instance) {

@@ -4,6 +4,7 @@ import com.moneybags.tempfly.TempFly;
 import io.github.lokka30.phantomcombat.PhantomCombat;
 import io.github.lokka30.phantomcombat.utils.CombatCause;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -39,11 +40,10 @@ public class CombatModeListener implements Listener {
             return;
         }
         if (instance.settings.get("combat-mode.enable", true) && !e.isCancelled()) {
-            //TODO remove poor LightningStorage usage below and in the next classes.
-            List<String> enabledWorlds = instance.settings.getStringList("combat-mode.enabled-worlds");
-            List<String> enabledGameModes = instance.settings.getStringList("combat-mode.enabled-gamemodes");
-            boolean combatCausePlayer = instance.settings.getBoolean("combat-mode.enabled-combat-causes.player");
-            boolean combatCauseEntity = instance.settings.getBoolean("combat-mode.enabled-combat-causes.entity");
+            List<String> enabledWorlds = instance.settings.get("combat-mode.enabled-worlds", Collections.singletonList("disabledWorld"));
+            List<String> enabledGameModes = instance.settings.get("combat-mode.enabled-gamemodes", Arrays.asList("SURVIVAL", "ADVENTURE"));
+            boolean combatCausePlayer = instance.settings.get("combat-mode.enabled-combat-causes.player", true);
+            boolean combatCauseEntity = instance.settings.get("combat-mode.enabled-combat-causes.entity", true);
 
             if (e.getEntity() instanceof Player) {
                 final Player defender = (Player) e.getEntity();
@@ -96,13 +96,13 @@ public class CombatModeListener implements Listener {
         if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK || cause == EntityDamageEvent.DamageCause.SUICIDE || e.isCancelled()) {
             return;
         }
-        if (instance.settings.getBoolean("combat-mode.enable")) {
+        if (instance.settings.get("combat-mode.enable", true)) {
             if (e.getEntity() instanceof Player) {
                 final Player defender = (Player) e.getEntity();
 
-                if (instance.settings.getStringList("combat-mode.enabled-worlds").contains(defender.getWorld().getName())) {
-                    if (instance.settings.getStringList("combat-mode.enabled-gamemodes").contains(defender.getGameMode().toString())) {
-                        if (instance.settings.getBoolean("combat-mode.enabled-combat-causes.generic")) {
+                if (instance.settings.get("combat-mode.enabled-worlds", Collections.singletonList(defender.getWorld().getName())).contains(defender.getWorld().getName())) {
+                    if (instance.settings.get("combat-mode.enabled-gamemodes", Arrays.asList("SURVIVAL", "ADVENTURE")).contains(defender.getGameMode().toString())) {
+                        if (instance.settings.get("combat-mode.enabled-combat-causes.generic", false)) {
                             enterCombat(defender, CombatCause.GENERIC, "none");
                         }
                     }
@@ -117,11 +117,11 @@ public class CombatModeListener implements Listener {
         final UUID uuid = p.getUniqueId();
 
         if (combatMap.containsKey(uuid)) {
-            if (instance.settings.getBoolean("combat-mode.effects.combat-log.kill-player")) {
+            if (instance.settings.get("combat-mode.effects.combat-log.kill-player", true)) {
                 p.setHealth(0.0D);
             }
 
-            if (instance.settings.getBoolean("combat-mode.effects.combat-log.lightning-strike-on-quit")) {
+            if (instance.settings.get("combat-mode.effects.combat-log.lightning-strike-on-quit", true)) {
                 p.getWorld().strikeLightningEffect(p.getLocation());
             }
 
@@ -129,9 +129,9 @@ public class CombatModeListener implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", p.getName()));
             }
 
-            Bukkit.broadcastMessage(instance.colorize(instance.messages.getString("combat-mode.player-left-in-combat").replaceAll("%player%", p.getName())));
+            Bukkit.broadcastMessage(instance.colorize(instance.messages.get("combat-mode.player-left-in-combat", "%player% left in combat").replaceAll("%player%", p.getName())));
 
-            if (instance.settings.getBoolean("combat-mode.effects.combat-log.broadcast-location")) {
+            if (instance.settings.get("combat-mode.effects.combat-log.broadcast-location", false)) {
                 Bukkit.broadcastMessage(instance.colorize(instance.messages.getString("combat-mode.player-left-in-combat-location")
                         .replaceAll("%x%", p.getLocation().getBlockX() + "")
                         .replaceAll("%y%", p.getLocation().getBlockY() + "")
@@ -147,11 +147,26 @@ public class CombatModeListener implements Listener {
             return;
         }
         final Player p = e.getPlayer();
-        if (instance.settings.getBoolean("combat-mode.block-flight")) {
+        if (instance.settings.get("combat-mode.block-flight", true)) {
             if (combatMap.containsKey(p.getUniqueId())) {
                 p.setFlying(false);
                 p.setAllowFlight(false);
-                p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.flight-blocked")));
+                p.sendMessage(instance.colorize(instance.messages.get("combat-mode.flight-blocked", "Flight not allowed in combat")));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSwitchGameMode(final PlayerGameModeChangeEvent event) {
+        final Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
+        if (!event.isCancelled() && instance.settings.get("combat-mode.block-flight", true)) {
+            if (event.getNewGameMode().equals(GameMode.CREATIVE) || event.getNewGameMode().equals(GameMode.SPECTATOR)) {
+                if (combatMap.containsKey(uuid)) {
+                    if (instance.settings.get("combat-mode.remove-on-gamemode-switch", true)) {
+                        cancel.add(uuid);
+                    }
+                }
             }
         }
     }
@@ -162,10 +177,10 @@ public class CombatModeListener implements Listener {
             return;
         }
         final Player p = e.getPlayer();
-        if (instance.settings.getBoolean("combat-mode.block-teleport")) {
+        if (instance.settings.get("combat-mode.block-teleport", false)) {
             if (combatMap.containsKey(p.getUniqueId())) {
                 e.setCancelled(true);
-                p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.teleport-blocked")));
+                p.sendMessage(instance.colorize(instance.messages.get("combat-mode.teleport-blocked", "teleport blocked in combat")));
             }
         }
     }
@@ -173,17 +188,17 @@ public class CombatModeListener implements Listener {
     @EventHandler
     public void onInteract(final PlayerInteractEvent e) {
         final Player p = e.getPlayer();
-        if (instance.settings.getBoolean("combat-mode.block-items.enable")) {
+        if (instance.settings.get("combat-mode.block-items.enable", true)) {
             if (combatMap.containsKey(p.getUniqueId())) {
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     final Material mainHand = p.getInventory().getItemInMainHand().getType();
                     final Material offHand = p.getInventory().getItemInOffHand().getType();
 
-                    List<String> blockedMaterials = instance.settings.getStringList("combat-mode.block-items.items");
+                    List<String> blockedMaterials = instance.settings.get("combat-mode.block-items.items", Collections.singletonList("ENDER_PEARL"));
 
                     if (blockedMaterials.contains(mainHand.toString()) || blockedMaterials.contains(offHand.toString())) {
                         e.setCancelled(true);
-                        p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.item-blocked")));
+                        p.sendMessage(instance.colorize(instance.messages.get("combat-mode.item-blocked", "You can't use that item in combat")));
                     }
                 }
             }
@@ -196,16 +211,16 @@ public class CombatModeListener implements Listener {
             return;
         }
         final Player p = e.getPlayer();
-        if (instance.settings.getBoolean("combat-mode.block-commands.enable")) {
+        if (instance.settings.get("combat-mode.block-commands.enable", true)) {
             if (combatMap.containsKey(p.getUniqueId())) {
                 final String[] args = e.getMessage().split(" ");
                 final String message = args[0];
-                List<String> blockedCommands = instance.settings.getStringList("combat-mode.block-commands.commands");
+                List<String> blockedCommands = instance.settings.get("combat-mode.block-commands.commands", Collections.singletonList("home"));
 
                 for (String blockedCommand : blockedCommands) {
                     if (message.equalsIgnoreCase(blockedCommand)) {
                         e.setCancelled(true);
-                        p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.command-blocked")));
+                        p.sendMessage(instance.colorize(instance.messages.get("combat-mode.command-blocked", "You can't use that command whilst in combat mode")));
                     }
                 }
             }
@@ -221,7 +236,7 @@ public class CombatModeListener implements Listener {
     }
 
     public void enterCombat(final Player player, CombatCause cause, String extraInfo) {
-        final int time = instance.settings.getInt("combat-mode.time");
+        final int time = instance.settings.get("combat-mode.time", 15);
         final UUID uuid = player.getUniqueId();
 
         if (Bukkit.getPluginManager().getPlugin("TempFly") != null) {
@@ -236,18 +251,18 @@ public class CombatModeListener implements Listener {
             combatMap.put(uuid, time);
 
             //Communcating the combat status
-            final boolean useActionBar = instance.messages.getBoolean("combat-mode.status.action-bar.enable");
-            final boolean useBossBar = instance.messages.getBoolean("combat-mode.status.boss-bar.enable");
-            final boolean useChat = instance.messages.getBoolean("combat-mode.status.chat.enable");
+            final boolean useActionBar = instance.messages.get("combat-mode.status.action-bar.enable", true);
+            final boolean useBossBar = instance.messages.get("combat-mode.status.boss-bar.enable", true);
+            final boolean useChat = instance.messages.get("combat-mode.status.chat.enable", true);
 
             //Setting reason for combat mode
             String reason = getReason(cause, extraInfo);
 
             //Boss bar args
             final String bossBarPath = "combat-mode.status.boss-bar.";
-            String barTitle = instance.colorize(instance.messages.getString(bossBarPath + "counter"));
-            BarColor barColor = BarColor.valueOf(instance.messages.getString(bossBarPath + "barColor"));
-            BarStyle barStyle = BarStyle.valueOf(instance.messages.getString(bossBarPath + "barStyle"));
+            String barTitle = instance.colorize(instance.messages.get(bossBarPath + "counter", "Invalid PhantomCombat Config!"));
+            BarColor barColor = BarColor.valueOf(instance.messages.get(bossBarPath + "barColor", "BLUE"));
+            BarStyle barStyle = BarStyle.valueOf(instance.messages.get(bossBarPath + "barStyle", "SOLID"));
             BossBar bossBar = Bukkit.createBossBar(barTitle, barColor, barStyle);
 
             combatStarted(player, bossBar, useBossBar, useChat, useActionBar, time, reason);
@@ -256,7 +271,7 @@ public class CombatModeListener implements Listener {
                 wasAllowedFlight.add(player);
             }
 
-            if (instance.settings.getBoolean("combat-mode.block-flight")) {
+            if (instance.settings.get("combat-mode.block-flight", true)) {
                 player.setFlying(false);
                 player.setAllowFlight(false);
             }
@@ -295,7 +310,7 @@ public class CombatModeListener implements Listener {
                         if (time != 1) {
                             plural = "s";
                         }
-                        bossBar.setTitle(instance.colorize(instance.messages.getString(bossBarPath + "counter").replaceAll("%time%", String.valueOf(current)).replaceAll("%s%", plural)));
+                        bossBar.setTitle(instance.colorize(instance.messages.get(bossBarPath + "counter", "Combat mode %time%").replaceAll("%time%", String.valueOf(current)).replaceAll("%s%", plural)));
                     }
 
                     //If the timer is complete, cancel.
@@ -315,19 +330,20 @@ public class CombatModeListener implements Listener {
             bossBar.addPlayer(p);
         }
         if (useChat) {
-            p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.status.chat.combat-entered")
-                    .replaceAll("%time%", String.valueOf(time)).replaceAll("%reason%", reason)));
+            p.sendMessage(instance.colorize(instance.messages.get("combat-mode.status.chat.combat-entered", "entered combat mode")
+                    .replaceAll("%time%", String.valueOf(time))
+                    .replaceAll("%reason%", reason)));
         }
         if (useActionBar) {
-            instance.actionBar(p, instance.messages.getString("combat-mode.status.action-bar.combat-entered")
+            instance.actionBar(p, instance.messages.get("combat-mode.status.action-bar.combat-entered", "entered combat mode")
                     .replaceAll("%time%", String.valueOf(time))
                     .replaceAll("%reason%", reason));
         }
-        if (instance.settings.getBoolean("combat-mode.effects.combat-started.enable")) {
+        if (instance.settings.get("combat-mode.effects.combat-started.enable", true)) {
             final String path = "combat-mode.effects.combat-started.";
-            final Sound sound = Sound.valueOf(instance.settings.getString(path + "sound"));
-            final float volume = instance.settings.getFloat(path + "volume");
-            final float pitch = instance.settings.getFloat(path + "pitch");
+            final Sound sound = Sound.valueOf(instance.settings.get(path + "sound", "ENTITY_EXPERIENCE_ORB_PICKUP"));
+            final float volume = instance.settings.get(path + "volume", 1.0F);
+            final float pitch = instance.settings.get(path + "pitch", 1.0F);
 
             p.playSound(p.getLocation(), sound, volume, pitch);
         }
@@ -339,16 +355,16 @@ public class CombatModeListener implements Listener {
             bossBar.removePlayer(p);
         }
         if (useChat) {
-            p.sendMessage(instance.colorize(instance.messages.getString("combat-mode.status.chat.combat-expired")));
+            p.sendMessage(instance.colorize(instance.messages.get("combat-mode.status.chat.combat-expired", "Combat mode expired")));
         }
         if (useActionBar) {
-            instance.actionBar(p, instance.messages.getString("combat-mode.status.action-bar.combat-expired"));
+            instance.actionBar(p, instance.messages.get("combat-mode.status.action-bar.combat-expired", "Combat mode expired"));
         }
-        if (instance.settings.getBoolean("combat-mode.effects.combat-finished.enable")) {
+        if (instance.settings.get("combat-mode.effects.combat-finished.enable", true)) {
             final String path = "combat-mode.effects.combat-finished.";
-            final Sound sound = Sound.valueOf(instance.settings.getString(path + "sound"));
-            final float volume = instance.settings.getFloat(path + "volume");
-            final float pitch = instance.settings.getFloat(path + "pitch");
+            final Sound sound = Sound.valueOf(instance.settings.get(path + "sound", "ENTITY_EXPERIENCE_ORB_PICKUP"));
+            final float volume = instance.settings.get(path + "volume", 1.0F);
+            final float pitch = instance.settings.get(path + "pitch", 1.0F);
 
             p.playSound(p.getLocation(), sound, volume, pitch);
         }
@@ -358,13 +374,13 @@ public class CombatModeListener implements Listener {
         String reason = "unknown reason";
         switch (cause) {
             case PLAYER:
-                reason = instance.messages.getString("combat-mode.status.reasons.player").replaceAll("%player%", extraInfo);
+                reason = instance.messages.get("combat-mode.status.reasons.player", "%player%").replaceAll("%player%", extraInfo);
                 break;
             case ENTITY:
-                reason = instance.messages.getString("combat-mode.status.reasons.entity").replaceAll("%name%", extraInfo);
+                reason = instance.messages.get("combat-mode.status.reasons.entity", "%name%").replaceAll("%name%", extraInfo);
                 break;
             case GENERIC:
-                reason = instance.messages.getString("combat-mode.status.reasons.generic");
+                reason = instance.messages.get("combat-mode.status.reasons.generic", "Generic");
                 break;
             default:
                 break;
