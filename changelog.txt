@@ -43,3 +43,11 @@ changes:
 - Updated 'settings.yml' + increased its version to 9
 - Added 'remove combat on gamemode switch' so admins switching to creative mode no longer have combat mode on (allows them to fly as well)
 - Fixed missing file defaults in 'CombatModeListener', still need to fix the defaults in the classes 'DeathCoordsListener', 'GracePeriodListener', 'PvPSettingsListener', 'PvPToggleListener' and 'StatsListener'.
+
+1.14.2-SNAPSHOT
+- Attempt fix 'Enabled Gamemodes Not Factoring In Attacker's Gamemode'
+
+1.14.3-SNAPSHOT
+- Updated 'settings.yml' + increased its version to 10
+- Added 'commands on combat' to settings. these commands are executed by the console when a player enters combat. allows for a %player% placeholder too.
+- Fixed defender being put into combat when attacker is in a disabled combat gamemode

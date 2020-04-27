@@ -104,6 +104,10 @@ combat-mode:
     - 'PAINTING'
     - 'ARMOR_STAND'
 
+  # The console will execute these commands when a player enters combat.
+  # Placeholders: %player% = the name of the player that entered combat
+  commands-on-combat: []
+
 death-coords:
   enable: true
 
@@ -175,4 +179,4 @@ pvp-toggle:
 updater: true
 
 # Don't touch this unless you know what you're doing.
-file-version: 9
+file-version: 10

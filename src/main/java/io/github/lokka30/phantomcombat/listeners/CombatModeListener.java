@@ -53,8 +53,10 @@ public class CombatModeListener implements Listener {
                             //Combat Cause: Player
                             if (combatCausePlayer) {
                                 final Player attacker = (Player) e.getDamager();
-                                enterCombat(attacker, CombatCause.PLAYER, defender.getName());
-                                enterCombat(defender, CombatCause.PLAYER, attacker.getName());
+                                if (enabledGameModes.contains(attacker.getGameMode().toString())) {
+                                    enterCombat(attacker, CombatCause.PLAYER, defender.getName());
+                                    enterCombat(defender, CombatCause.PLAYER, attacker.getName());
+                                }
                             }
                         } else {
                             //Combat Cause: Entity
@@ -346,6 +348,9 @@ public class CombatModeListener implements Listener {
             final float pitch = instance.settings.get(path + "pitch", 1.0F);
 
             p.playSound(p.getLocation(), sound, volume, pitch);
+        }
+        for (String command : instance.settings.get("combat-mode.commands-on-combat", Collections.singletonList("say %player% entered combat"))) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }
 
