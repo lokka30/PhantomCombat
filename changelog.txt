@@ -51,3 +51,6 @@ changes:
 - Updated 'settings.yml' + increased its version to 10
 - Added 'commands on combat' to settings. these commands are executed by the console when a player enters combat. allows for a %player% placeholder too.
 - Fixed defender being put into combat when attacker is in a disabled combat gamemode
+
+1.14.4-SNAPSHOT
+- Fixed - %player% not being replaced in console commands on combat
