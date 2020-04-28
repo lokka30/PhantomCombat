@@ -54,3 +54,6 @@ changes:
 
 1.14.4-SNAPSHOT
 - Fixed - %player% not being replaced in console commands on combat
+
+1.14.5-SNAPSHOT:
+- Fixed '%player% entered combat' announcement by console (fixed commands by console on combat default)

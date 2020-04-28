@@ -349,7 +349,7 @@ public class CombatModeListener implements Listener {
 
             p.playSound(p.getLocation(), sound, volume, pitch);
         }
-        for (String command : instance.settings.get("combat-mode.commands-on-combat", Collections.singletonList("say %player% entered combat"))) {
+        for (String command : instance.settings.get("combat-mode.commands-on-combat", new ArrayList<String>())) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", p.getName()));
         }
     }
