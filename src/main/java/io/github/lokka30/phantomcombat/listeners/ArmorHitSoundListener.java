@@ -17,8 +17,7 @@ public class ArmorHitSoundListener implements Listener {
 
     @EventHandler
     public void onDamage(final EntityDamageEvent e) {
-
-        if (instance.settings.get("armor-hit-sound.enable", true) && !e.isCancelled()) {
+        if (instance.settings.get("armor-hit-sound.enable", true) && !e.isCancelled() && e.getDamage() != 0.00) {
             if (e.getEntity() instanceof Player) {
                 final Player p = (Player) e.getEntity();
                 if (p.hasPermission("phantomcombat.armor-hit-sound")) {
@@ -28,11 +27,13 @@ public class ArmorHitSoundListener implements Listener {
                             || p.getInventory().getBoots() != null) {
 
                         if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
-                            Sound sound = Sound.valueOf(instance.settings.get("armor-hit-sound.sound", "ENTITY_BLAZE_HURT"));
-                            float volume = instance.settings.get("armor-hit-sound.volume", 1.0F);
-                            float pitch = instance.settings.get("armor-hit-sound.pitch", 1.0F);
+                            if (!instance.worldGuardUtil.isPVPDenied(p)) {
+                                Sound sound = Sound.valueOf(instance.settings.get("armor-hit-sound.sound", "ENTITY_BLAZE_HURT"));
+                                float volume = instance.settings.get("armor-hit-sound.volume", 1.0F);
+                                float pitch = instance.settings.get("armor-hit-sound.pitch", 1.0F);
 
-                            p.getWorld().playSound(p.getLocation(), sound, volume, pitch);
+                                p.getWorld().playSound(p.getLocation(), sound, volume, pitch);
+                            }
                         }
                     }
                 }

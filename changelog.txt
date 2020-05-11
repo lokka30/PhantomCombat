@@ -57,3 +57,8 @@ changes:
 
 1.14.5-SNAPSHOT:
 - Fixed '%player% entered combat' announcement by console (fixed commands by console on combat default)
+
+1.15.0-SNAPSHOT:
+- Addition | Added WorldGuard support for 'pvp' flag in CombatMode, Blood, ArmorHitSound and GracePeriod modules
+- Improvement | Added checks to Blood and ArmorHitSound to check if the attack did any damage (some plugins remove the damage but not cancel the event)
+- Improvement | Added 'TempFly' and 'WorldGuard' to softdepends in internal plugin.yml

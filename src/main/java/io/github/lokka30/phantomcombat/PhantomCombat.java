@@ -8,6 +8,7 @@ import io.github.lokka30.phantomcombat.listeners.*;
 import io.github.lokka30.phantomcombat.utils.LogLevel;
 import io.github.lokka30.phantomcombat.utils.UpdateChecker;
 import io.github.lokka30.phantomcombat.utils.Utils;
+import io.github.lokka30.phantomcombat.utils.WorldGuardUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
@@ -26,10 +27,12 @@ public class PhantomCombat extends JavaPlugin {
     public FlatFile messages;
     public FlatFile data;
     boolean configEnabled = false;
+    public boolean hasWorldGuard = false;
 
     public Utils utils;
     public GracePeriodListener gracePeriodListener;
     private PluginManager pluginManager;
+    public WorldGuardUtil worldGuardUtil;
 
     @Override
     public void onLoad() {
@@ -71,6 +74,11 @@ public class PhantomCombat extends JavaPlugin {
             log(LogLevel.INFO, "Server is running supported version &a" + currentVersion + "&7.");
         } else {
             log(LogLevel.WARNING, "Running &cunsupported&7 version &a" + currentVersion + "&7. You will not get support if you do not run &a" + recommendedVersion + "&7!");
+        }
+
+        hasWorldGuard = pluginManager.getPlugin("WorldGuard") != null;
+        if (hasWorldGuard) {
+            worldGuardUtil = new WorldGuardUtil(this);
         }
     }
 

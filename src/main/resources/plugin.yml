@@ -2,10 +2,8 @@ name: PhantomCombat
 main: io.github.lokka30.phantomcombat.PhantomCombat
 version: ${project.version}
 api-version: '1.15'
-authors:
-  - lokka30 (PhantomCombat Author)
-  - JavaFactory (LightningStorage Developer)
-  - bStats Team (bStats Metrics)
+author: lokka30
+softdepend: [WorldGuard, TempFly]
 description: ${project.description}
 website: https://www.spigotmc.org/resources/%E2%9A%94-phantomcombat-%E2%9A%94-enhance-your-combat-experience.74060/
 
