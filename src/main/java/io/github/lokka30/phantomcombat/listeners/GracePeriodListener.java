@@ -75,7 +75,7 @@ public class GracePeriodListener implements Listener {
                     graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
                 } else {
                     if (checkGrace(attacker)) {
-                        if (!(instance.worldGuardUtil.isPVPDenied(attacker) || instance.worldGuardUtil.isPVPDenied(defender))) {
+                        if (instance.hasWorldGuard && !(instance.worldGuardUtil.isPVPDenied(attacker) || instance.worldGuardUtil.isPVPDenied(defender))) {
                             graceMessage(defender, instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
                             graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.broke-period")));
                             graceMap.remove(attacker.getUniqueId());

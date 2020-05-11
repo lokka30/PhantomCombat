@@ -77,7 +77,7 @@ public class BloodListener implements Listener {
                 break;
         }
 
-        if (!instance.worldGuardUtil.isPVPDenied(livingEntity)) {
+        if (instance.hasWorldGuard && !instance.worldGuardUtil.isPVPDenied(livingEntity)) {
             livingEntity.getWorld().playEffect(livingEntity.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
         }
     }
