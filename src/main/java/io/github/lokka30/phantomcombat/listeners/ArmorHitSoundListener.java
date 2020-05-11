@@ -27,7 +27,7 @@ public class ArmorHitSoundListener implements Listener {
                             || p.getInventory().getBoots() != null) {
 
                         if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
-                            if (instance.hasWorldGuard && !instance.worldGuardUtil.isPVPDenied(p)) {
+                            if (!(instance.hasWorldGuard && instance.worldGuardUtil.isPVPDenied(p))) {
                                 Sound sound = Sound.valueOf(instance.settings.get("armor-hit-sound.sound", "ENTITY_BLAZE_HURT"));
                                 float volume = instance.settings.get("armor-hit-sound.volume", 1.0F);
                                 float pitch = instance.settings.get("armor-hit-sound.pitch", 1.0F);
