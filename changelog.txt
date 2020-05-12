@@ -65,3 +65,4 @@ changes:
 
 1.15.1-SNAPSHOT:
 - Addition | Projectiles are now factored in with Combat Mode and Grace Period systems. e.g. use an arrow, hit a player, combat started.
+- Fix | Non-living entities, such as dropped items, no longer attempt to bleed and cause errors.
