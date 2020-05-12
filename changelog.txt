@@ -62,3 +62,6 @@ changes:
 - Addition | Added WorldGuard support for 'pvp' flag in CombatMode, Blood, ArmorHitSound and GracePeriod modules
 - Improvement | Added checks to Blood and ArmorHitSound to check if the attack did any damage (some plugins remove the damage but not cancel the event)
 - Improvement | Added 'TempFly' and 'WorldGuard' to softdepends in internal plugin.yml
+
+1.15.1-SNAPSHOT:
+- Addition | Projectiles are now factored in with Combat Mode and Grace Period systems. e.g. use an arrow, hit a player, combat started.

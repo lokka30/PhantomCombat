@@ -2,6 +2,7 @@ package io.github.lokka30.phantomcombat.listeners;
 
 import io.github.lokka30.phantomcombat.PhantomCombat;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -66,19 +67,40 @@ public class GracePeriodListener implements Listener {
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent e) {
         if (instance.settings.getBoolean("grace-period.enable") && !e.isCancelled()) {
-            if (e.getEntity() instanceof Player && e.getDamager() instanceof Player && !e.isCancelled()) {
+            if (!e.isCancelled() && e.getEntity() instanceof Player) {
                 final Player defender = (Player) e.getEntity();
-                final Player attacker = (Player) e.getDamager();
 
-                if (checkGrace(defender)) {
-                    e.setCancelled(true);
-                    graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
-                } else {
-                    if (checkGrace(attacker)) {
-                        if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(attacker) || instance.worldGuardUtil.isPVPDenied(defender)))) {
-                            graceMessage(defender, instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
-                            graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.broke-period")));
-                            graceMap.remove(attacker.getUniqueId());
+                if (e.getDamager() instanceof Player) {
+                    final Player attacker = (Player) e.getDamager();
+
+                    if (checkGrace(defender)) {
+                        e.setCancelled(true);
+                        graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
+                    } else {
+                        if (checkGrace(attacker)) {
+                            if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(attacker) || instance.worldGuardUtil.isPVPDenied(defender)))) {
+                                graceMessage(defender, instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
+                                graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.broke-period")));
+                                graceMap.remove(attacker.getUniqueId());
+                            }
+                        }
+                    }
+                } else if ((e.getDamager() instanceof Projectile) && (((Projectile) e.getDamager()).getShooter() instanceof Player)) {
+                    Projectile projectile = (Projectile) e.getDamager();
+                    Player attacker = (Player) projectile.getShooter();
+
+                    if (attacker != null) {
+                        if (checkGrace(defender)) {
+                            e.setCancelled(true);
+                            graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.target-protected").replaceAll("%target%", defender.getName())));
+                        } else {
+                            if (checkGrace(attacker)) {
+                                if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(attacker) || instance.worldGuardUtil.isPVPDenied(defender)))) {
+                                    graceMessage(defender, instance.colorize(instance.messages.getString("grace-period.target-broke-period").replaceAll("%target%", attacker.getName())));
+                                    graceMessage(attacker, instance.colorize(instance.messages.getString("grace-period.broke-period")));
+                                    graceMap.remove(attacker.getUniqueId());
+                                }
+                            }
                         }
                     }
                 }

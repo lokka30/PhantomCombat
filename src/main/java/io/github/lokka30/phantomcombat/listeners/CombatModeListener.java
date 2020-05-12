@@ -11,6 +11,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -53,6 +54,18 @@ public class CombatModeListener implements Listener {
                             //Combat Cause: Player
                             if (combatCausePlayer) {
                                 final Player attacker = (Player) e.getDamager();
+                                if (enabledGameModes.contains(attacker.getGameMode().toString())) {
+                                    if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(defender) || instance.worldGuardUtil.isPVPDenied(attacker)))) {
+                                        enterCombat(attacker, CombatCause.PLAYER, defender.getName());
+                                        enterCombat(defender, CombatCause.PLAYER, attacker.getName());
+                                    }
+                                }
+                            }
+                        } else if (e.getDamager() instanceof Projectile && ((Projectile) e.getDamager()).getShooter() instanceof Player) {
+                            //Combat Cause: Player
+                            if (combatCausePlayer) {
+                                final Projectile projectile = (Projectile) e.getDamager();
+                                final Player attacker = (Player) projectile.getShooter();
                                 if (enabledGameModes.contains(attacker.getGameMode().toString())) {
                                     if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(defender) || instance.worldGuardUtil.isPVPDenied(attacker)))) {
                                         enterCombat(attacker, CombatCause.PLAYER, defender.getName());
