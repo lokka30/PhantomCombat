@@ -54,10 +54,13 @@ public class CombatModeListener implements Listener {
                             //Combat Cause: Player
                             if (combatCausePlayer) {
                                 final Player attacker = (Player) e.getDamager();
-                                if (enabledGameModes.contains(attacker.getGameMode().toString())) {
-                                    if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(defender) || instance.worldGuardUtil.isPVPDenied(attacker)))) {
-                                        enterCombat(attacker, CombatCause.PLAYER, defender.getName());
-                                        enterCombat(defender, CombatCause.PLAYER, attacker.getName());
+
+                                if (attacker != null) {
+                                    if (enabledGameModes.contains(attacker.getGameMode().toString())) {
+                                        if (!(instance.hasWorldGuard && (instance.worldGuardUtil.isPVPDenied(defender) || instance.worldGuardUtil.isPVPDenied(attacker)))) {
+                                            enterCombat(attacker, CombatCause.PLAYER, defender.getName());
+                                            enterCombat(defender, CombatCause.PLAYER, attacker.getName());
+                                        }
                                     }
                                 }
                             }
