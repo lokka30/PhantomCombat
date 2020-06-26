@@ -66,3 +66,10 @@ changes:
 1.15.1-SNAPSHOT:
 - Addition | Projectiles are now factored in with Combat Mode and Grace Period systems. e.g. use an arrow, hit a player, combat started.
 - Fix | Non-living entities, such as dropped items, no longer attempt to bleed and cause errors.
+
+v1.15.2-SNAPSHOT:
+- Improvement | Plugin now supports 1.16.1 (as well as 1.15.x)
+- Improvement | Plugin is now compiled in 1.16.1.
+- Improvement | Updated libraries, they were quite out of date.
+- Improvement | Renamed a few Utils methods.
+- Improvement | Changed the compatibility checker to allow for multiple supported server versions instead of just one.

@@ -1,23 +1,26 @@
 package io.github.lokka30.phantomcombat.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Utils {
 
     public Utils() {
     }
 
-    public String getRecommendedServerVersion() {
-        return "1.15";
+    public List<String> getSupportedServerVersions() {
+        return Arrays.asList("1.15", "1.16");
     }
 
-    public int getRecommendedSettingsVersion() {
+    public int getLatestSettingsVersion() {
         return 10;
     }
 
-    public int getRecommendedMessagesVersion() {
+    public int getLatestMessagesVersion() {
         return 4;
     }
 
-    public int getRecommendedDataVersion() {
+    public int getLatestDataVersion() {
         return 1;
     }
 }

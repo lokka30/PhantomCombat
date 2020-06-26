@@ -2,7 +2,7 @@ package io.github.lokka30.phantomcombat;
 
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.exception.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import io.github.lokka30.phantomcombat.commands.*;
 import io.github.lokka30.phantomcombat.listeners.*;
 import io.github.lokka30.phantomcombat.utils.LogLevel;
@@ -57,7 +57,7 @@ public class PhantomCombat extends JavaPlugin {
         registerCommands();
 
         log(LogLevel.INFO, "&8[&75/5&8] &7Setting up bStats metrics...");
-        new Metrics(this);
+        new Metrics(this, 6270);
 
         log(LogLevel.INFO, "----- ENABLING DONE -----");
 
@@ -69,11 +69,15 @@ public class PhantomCombat extends JavaPlugin {
      */
     private void checkCompatibility() {
         final String currentVersion = getServer().getVersion();
-        final String recommendedVersion = utils.getRecommendedServerVersion();
-        if (currentVersion.contains(recommendedVersion)) {
-            log(LogLevel.INFO, "Server is running supported version &a" + currentVersion + "&7.");
-        } else {
-            log(LogLevel.WARNING, "Running &cunsupported&7 version &a" + currentVersion + "&7. You will not get support if you do not run &a" + recommendedVersion + "&7!");
+        boolean isRunningSupportedServerVersion = false;
+        for (String supportedVersion : utils.getSupportedServerVersions()) {
+            if (currentVersion.contains(supportedVersion)) {
+                isRunningSupportedServerVersion = true;
+                break;
+            }
+        }
+        if (!isRunningSupportedServerVersion) {
+            log(LogLevel.WARNING, "&7This version of PhantomCombat does not support your server version '&b" + currentVersion + "&7'. You will not receive the author's support with this unsupported configuration.");
         }
 
         hasWorldGuard = pluginManager.getPlugin("WorldGuard") != null;
@@ -143,15 +147,15 @@ public class PhantomCombat extends JavaPlugin {
 
         //Check their versions -- default set to 0 instead of recommended
         //version as if they are missing the file version then they haven't configured the file properly.
-        if (settings.get("file-version", 0) != utils.getRecommendedSettingsVersion()) {
+        if (settings.get("file-version", 0) != utils.getLatestSettingsVersion()) {
             log(LogLevel.SEVERE, "File &asettings.yml&7 is out of date! Errors are likely to occur! Reset it or merge the old values to the new file.");
         }
 
-        if (messages.get("file-version", 0) != utils.getRecommendedMessagesVersion()) {
+        if (messages.get("file-version", 0) != utils.getLatestMessagesVersion()) {
             log(LogLevel.SEVERE, "File &amessages.yml&7 is out of date! Errors are likely to occur! Reset it or merge the old values to the new file.");
         }
 
-        if (data.get("file-version", 0) != utils.getRecommendedDataVersion()) {
+        if (data.get("file-version", 0) != utils.getLatestDataVersion()) {
             log(LogLevel.SEVERE, "File &adata.yml&7 is out of date! Errors are likely to occur! Reset it or merge the old values to the new file.");
         }
 
