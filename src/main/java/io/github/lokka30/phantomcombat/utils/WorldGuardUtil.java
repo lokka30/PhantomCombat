@@ -32,7 +32,6 @@ public class WorldGuardUtil {
         Location loc = livingEntity.getLocation();
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionManager regions = container.get(BukkitAdapter.adapt(livingEntity.getWorld()));
-
         return Objects.requireNonNull(regions).getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()));
     }
 
@@ -65,12 +64,15 @@ public class WorldGuardUtil {
         //Check if WorldGuard-plugin exists
         if (instance.hasWorldGuard) {
             //Sorted region array, highest priority comes last.
-            ProtectedRegion[] regions = sortRegionsByPriority(getRegionSet(livingEntity));
+            ApplicableRegionSet regionSet = getRegionSet(livingEntity);
+            if (regionSet != null) {
+                ProtectedRegion[] regions = sortRegionsByPriority(regionSet);
 
-            //Check region flags on integrity.
-            for (ProtectedRegion region : regions) {
-                if (region.getFlag(Flags.PVP) == StateFlag.State.DENY) {
-                    return true;
+                //Check region flags on integrity.
+                for (ProtectedRegion region : regions) {
+                    if (region.getFlag(Flags.PVP) == StateFlag.State.DENY) {
+                        return true;
+                    }
                 }
             }
         }

@@ -73,3 +73,6 @@ v1.15.2-SNAPSHOT:
 - Improvement | Updated libraries, they were quite out of date.
 - Improvement | Renamed a few Utils methods.
 - Improvement | Changed the compatibility checker to allow for multiple supported server versions instead of just one.
+
+v1.15.3-SNAPSHOT:
+- Impromevent, Untested Fix | Now makes sure that the RegionSet is not null when checking if the entity is in a combat-allowed worldguard region
