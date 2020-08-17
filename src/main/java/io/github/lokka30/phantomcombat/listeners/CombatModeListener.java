@@ -1,6 +1,5 @@
 package io.github.lokka30.phantomcombat.listeners;
 
-import com.moneybags.tempfly.TempFly;
 import io.github.lokka30.phantomcombat.PhantomCombat;
 import io.github.lokka30.phantomcombat.utils.CombatCause;
 import org.bukkit.Bukkit;
@@ -26,7 +25,7 @@ import java.util.*;
 public class CombatModeListener implements Listener {
 
     private PhantomCombat instance;
-
+    
     public CombatModeListener(final PhantomCombat instance) {
         this.instance = instance;
     }
@@ -259,10 +258,6 @@ public class CombatModeListener implements Listener {
         final int time = instance.settings.get("combat-mode.time", 15);
         final UUID uuid = player.getUniqueId();
 
-        if (Bukkit.getPluginManager().getPlugin("TempFly") != null) {
-            TempFly.getAPI().toggleTempfly(player, false, false);
-        }
-
         if (combatMap.containsKey(uuid)) {
             //Since the user is already in combat, reset their timer.
             combatMap.replace(uuid, time);
@@ -275,6 +270,10 @@ public class CombatModeListener implements Listener {
             final boolean useBossBar = instance.messages.get("combat-mode.status.boss-bar.enable", true);
             final boolean useChat = instance.messages.get("combat-mode.status.chat.enable", true);
 
+            if (instance.hasTempFly()) {
+            	instance.getTempFlyHook().enterCombat(player);
+            }
+            
             //Setting reason for combat mode
             String reason = getReason(cause, extraInfo);
 
@@ -305,11 +304,14 @@ public class CombatModeListener implements Listener {
                         cancel.remove(uuid);
                         return;
                     }
-
+                    
 
                     if (cancel.contains(uuid)) {
                         //the combat mode can be forced to expire, e.g. from death.
                         cancel();
+                        if (instance.hasTempFly()) {
+                        	instance.getTempFlyHook().exitCombat(player);
+                        }
                         if (wasAllowedFlight.contains(player)) {
                             player.setAllowFlight(true);
                         }
@@ -339,6 +341,9 @@ public class CombatModeListener implements Listener {
                         combatMap.remove(uuid);
                         cancel.remove(uuid);
                         combatFinished(player, bossBar, useBossBar, useChat, useActionBar);
+                        if (instance.hasTempFly()) {
+                        	instance.getTempFlyHook().exitCombat(player);
+                        }
                     }
                 }
             }.runTaskTimer(instance, 0, 20);
