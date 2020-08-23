@@ -12,6 +12,7 @@ import io.github.lokka30.phantomcombat.utils.WorldGuardUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -28,6 +29,7 @@ public class PhantomCombat extends JavaPlugin {
     public FlatFile data;
     boolean configEnabled = false;
     public boolean hasWorldGuard = false;
+    private TempFlyRequirement tempflyRequirement;
 
     public Utils utils;
     public GracePeriodListener gracePeriodListener;
@@ -46,6 +48,9 @@ public class PhantomCombat extends JavaPlugin {
         log(LogLevel.INFO, "----- ENABLING BEGAN ----");
         log(LogLevel.INFO, "&8[&71/5&8] &7Checking compatibility...");
         checkCompatibility();
+        if (Bukkit.getPluginManager().getPlugin("TempFly") != null) {
+        	try {tempflyRequirement = new TempFlyRequirement();} catch (Exception e) {}
+        }
 
         log(LogLevel.INFO, "&8[&72/5&8] &7Loading files...");
         loadFiles();
@@ -86,6 +91,14 @@ public class PhantomCombat extends JavaPlugin {
         }
     }
 
+    public TempFlyRequirement getTempFlyHook() {
+    	return tempflyRequirement;
+    }
+    
+    public boolean hasTempFly() {
+    	return tempflyRequirement != null;
+    }
+    
     /*
     Sets up the files from LightningStorage.
      */
